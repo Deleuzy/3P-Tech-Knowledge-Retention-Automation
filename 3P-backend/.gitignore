@@ -1,0 +1,17 @@
+# Security: Protect your GitHub Token
+.env
+
+# Python Caches
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env/
+
+# React / Frontend
+node_modules/
+build/
+.DS_Store
+
+# 3P Specific
+*.log
