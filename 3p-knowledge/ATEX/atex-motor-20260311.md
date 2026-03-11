@@ -13,7 +13,8 @@ tags: ["lesson-learned", "atex"]
 
 ## Summary
 
-Project: ATEX Motor. Successes: Good planning...
+Project: ATEX Motor. Successes: Good planning
+...
 
 ## Background
 
@@ -26,6 +27,7 @@ Relevant standards and regulatory requirements.
 ## Best Practices
 
 Good planning
+
 
 ## Known Pitfalls
 
@@ -44,7 +46,9 @@ Good planning
 **ATEX Motor**
 
 - **Root Cause**: Wrong Ex certificate selected for Zone 2 motor
+
 - **What Happened**: Verify zone classification before ordering
+
 - **Cost**: (fill in cost impact)
 
 ## References
