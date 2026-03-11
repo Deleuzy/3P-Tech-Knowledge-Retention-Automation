@@ -13,8 +13,7 @@ tags: ["lesson-learned", "atex"]
 
 ## Summary
 
-Project: ATEX Motor. Successes: Good planning
-...
+Project: ATEX Motor. Successes: Good planning...
 
 ## Background
 
@@ -27,7 +26,6 @@ Relevant standards and regulatory requirements.
 ## Best Practices
 
 Good planning
-
 
 ## Known Pitfalls
 
@@ -45,11 +43,9 @@ Good planning
 
 **ATEX Motor**
 
-- **Root Cause**: Wrong Ex certificate selected for Zone 2 motor
-
+- **Root Cause**: Wrong Ex certificate selected - caused 75,000 DKK extra cost
 - **What Happened**: Verify zone classification before ordering
-
-- **Cost**: (fill in cost impact)
+- **Cost**: 75,000 DKK
 
 ## References
 
