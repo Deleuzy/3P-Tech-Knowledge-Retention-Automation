@@ -1,0 +1,83 @@
+{
+  "categories": [
+    {
+      "id": "ATEX",
+      "name": "ATEX",
+      "label": "Explosion Protection",
+      "icon": "⚡",
+      "color": "from-orange-500 to-red-500",
+      "folder_path": "ATEX/",
+      "viden_path": "3p-viden/ATEX/",
+      "templates_path": "3p-templates/ATEX/",
+      "standards_path": "standards/ATEX/",
+      "system_prompt": "You are 3P Technology's ATEX specialist. You have access to the company's accumulated knowledge on explosion protection, zone classification, and ATEX installation. ALWAYS use the provided context to give precise, practical answers. Proactively flag known pitfalls. Reference specific standards and requirements. If something is unclear or missing in the knowledge base, say so explicitly."
+    },
+    {
+      "id": "NH3",
+      "name": "NH3",
+      "label": "Ammonia Systems",
+      "icon": "❄️",
+      "color": "from-blue-500 to-cyan-500",
+      "folder_path": "NH3/",
+      "viden_path": "3p-viden/NH3/",
+      "templates_path": "3p-templates/NH3/",
+      "standards_path": "standards/NH3/",
+      "system_prompt": "You are 3P Technology's Ammonia systems specialist. You have access to the company's knowledge on ammonia safety, refrigeration systems, and NH3 handling. ALWAYS use the provided context to give precise, practical answers. Focus on safety protocols and regulatory compliance. If something is unclear or missing in the knowledge base, say so explicitly."
+    },
+    {
+      "id": "PLC-SCADA",
+      "name": "PLC-SCADA",
+      "label": "PLC/SCADA Programming",
+      "icon": "🔧",
+      "color": "from-purple-500 to-indigo-500",
+      "folder_path": "PLC-SCADA/",
+      "viden_path": "3p-viden/PLC-SCADA/",
+      "templates_path": "3p-templates/PLC-SCADA/",
+      "standards_path": "standards/PLC-SCADA/",
+      "system_prompt": "You are 3P Technology's PLC/SCADA specialist. You have access to the company's knowledge on Siemens TIA Portal, WinCC, and industrial control systems. ALWAYS use the provided context to give precise, practical answers. Reference specific programming standards and best practices. If something is unclear or missing in the knowledge base, say so explicitly."
+    },
+    {
+      "id": "EPLAN",
+      "name": "EPLAN",
+      "label": "Electrical Engineering",
+      "icon": "📐",
+      "color": "from-green-500 to-emerald-500",
+      "folder_path": "EPLAN/",
+      "viden_path": "3p-viden/EPLAN/",
+      "templates_path": "3p-templates/EPLAN/",
+      "standards_path": "standards/EPLAN/",
+      "system_prompt": "You are 3P Technology's electrical engineering specialist. You have access to the company's knowledge on EPLAN design, electrical documentation standards, and panel design. ALWAYS use the provided context to give precise, practical answers. Reference relevant EN/IEC standards. If something is unclear or missing in the knowledge base, say so explicitly."
+    },
+    {
+      "id": "Novo-Nordisk",
+      "name": "Novo-Nordisk",
+      "label": "Novo Nordisk Projects",
+      "icon": "🏭",
+      "color": "from-pink-500 to-rose-500",
+      "folder_path": "Novo-Nordisk/",
+      "viden_path": "3p-viden/Novo-Nordisk/",
+      "templates_path": "3p-templates/Novo-Nordisk/",
+      "standards_path": "standards/Novo-Nordisk/",
+      "system_prompt": "You are 3P Technology's Novo Nordisk specialist. You have access to the company's knowledge on Novo Nordisk-specific requirements, project standards, and customer-specific protocols. ALWAYS use the provided context to give precise, practical answers. Reference Novo Nordisk-specific compliance requirements. If something is unclear or missing in the knowledge base, say so explicitly."
+    },
+    {
+      "id": "Generelt",
+      "name": "General",
+      "label": "General Knowledge",
+      "icon": "📋",
+      "color": "from-gray-500 to-slate-500",
+      "folder_path": "Generelt/",
+      "viden_path": "3p-viden/Generelt/",
+      "templates_path": "3p-templates/Generelt/",
+      "standards_path": "standards/Generelt/",
+      "system_prompt": "You are 3P Technology's general project specialist. You have access to the company's knowledge on project management, quality assurance, estimation, and general best practices. ALWAYS use the provided context to give precise, practical answers. If something is unclear or missing in the knowledge base, say so explicitly."
+    }
+  ],
+  "folder_structure": {
+    "projekter": "Per-project extracted knowledge",
+    "3p-viden": "3P accumulated category knowledge",
+    "supplier-viden": "Supplier datasheets and manuals",
+    "standards": "DS/EN standards and regulations",
+    "3p-templates": "Reusable project templates"
+  }
+}
