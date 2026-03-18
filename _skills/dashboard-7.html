@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3P ProjectFlow</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; background: #fafafa; color: #1d1d1f; }
+    .flex { display: flex; }
+    .flex-container { display: flex; height: 100vh; }
+    
+    .sidebar { width: 260px; background: white; border-right: 1px solid #e5e5e7; padding: 20px; overflow-y: auto; }
+    .logo { font-size: 18px; font-weight: 700; margin-bottom: 30px; }
+    .nav-section { margin-bottom: 25px; }
+    .nav-title { font-size: 11px; font-weight: 600; color: #86868b; text-transform: uppercase; margin-bottom: 10px; }
+    .nav-link { padding: 10px 12px; margin-bottom: 6px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+    .nav-link:hover { background: #f5f5f7; }
+    .nav-link.active { background: #007aff; color: white; }
+    
+    .main { flex: 1; overflow-y: auto; padding: 40px; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .header h1 { font-size: 28px; font-weight: 700; }
+    .btn-main { padding: 10px 18px; background: #007aff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; }
+    .btn-main:hover { background: #0051d5; }
+    
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 30px; }
+    .stat { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e5e7; }
+    .stat-label { font-size: 12px; color: #86868b; }
+    .stat-value { font-size: 28px; font-weight: 700; margin-top: 5px; }
+    
+    .section-title { font-size: 18px; font-weight: 600; margin: 30px 0 15px; }
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 12px; }
+    
+    .project-card { background: white; border: 1px solid #e5e5e7; border-radius: 12px; padding: 20px; cursor: pointer; }
+    .proj-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; }
+    .proj-info { flex: 1; }
+    .proj-id { font-size: 11px; color: #86868b; font-weight: 600; }
+    .proj-name { font-size: 16px; font-weight: 600; margin: 3px 0; }
+    .proj-customer { font-size: 13px; color: #86868b; }
+    .proj-status { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; background: #cfe2ff; color: #084298; }
+    
+    .phases-track { margin: 16px 0; }
+    .phase-progress { display: flex; gap: 2px; margin-bottom: 8px; }
+    .phase-dot { width: 16px; height: 16px; border-radius: 50%; background: #e5e5e7; font-size: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
+    .phase-done { background: #34c759; }
+    .phase-active { background: #007aff; }
+    
+    .phase-label { font-size: 10px; color: #86868b; }
+    
+    .actions { display: flex; gap: 8px; margin-top: 12px; }
+    .btn-small { flex: 1; padding: 8px; border: 1px solid #e5e5e7; background: white; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; }
+    .btn-small:hover { border-color: #007aff; color: #007aff; }
+    .btn-small.primary { background: #007aff; color: white; border-color: #007aff; }
+    .btn-small.primary:hover { background: #0051d5; }
+    
+    .view { display: none; }
+    .view.active { display: block; }
+    
+    .phase-card { background: white; border: 1px solid #e5e5e7; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+    .phase-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .phase-name { font-size: 14px; font-weight: 600; }
+    .phase-timer { font-size: 11px; color: #86868b; }
+    .phase-desc { font-size: 13px; color: #86868b; margin-bottom: 12px; }
+    
+    .gates-section { margin-bottom: 16px; }
+    .gates-title { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+    .gate { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 12px; }
+    .gate-check { width: 18px; height: 18px; border-radius: 50%; background: #e5e5e7; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .gate-check.done { background: #34c759; color: white; font-size: 10px; font-weight: 600; }
+    
+    .files-section { background: #f5f5f7; border-radius: 8px; padding: 12px; margin-bottom: 16px; }
+    .files-title { font-size: 11px; font-weight: 600; color: #86868b; text-transform: uppercase; margin-bottom: 8px; }
+    .file-input { font-size: 12px; color: #007aff; cursor: pointer; }
+    
+    .modal-backdrop { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 9998; }
+    .modal-backdrop.show { display: flex; align-items: center; justify-content: center; }
+    
+    .modal { background: white; border-radius: 16px; padding: 24px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 9999; }
+    .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 11px; font-weight: 600; color: #86868b; margin-bottom: 6px; text-transform: uppercase; }
+    .form-input, .form-select { width: 100%; padding: 10px; border: 1px solid #e5e5e7; border-radius: 8px; font-size: 14px; font-family: inherit; }
+    .form-input:focus, .form-select:focus { outline: none; border-color: #007aff; box-shadow: 0 0 0 3px #007aff18; }
+    
+    .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+    .modal-buttons button { flex: 1; padding: 10px; border: 1px solid #e5e5e7; background: white; border-radius: 8px; cursor: pointer; font-weight: 500; transition: 0.2s; }
+    .modal-buttons button:hover { border-color: #007aff; color: #007aff; }
+    .modal-buttons button.primary { background: #007aff; color: white; border-color: #007aff; }
+    .modal-buttons button.primary:hover { background: #0051d5; }
+  </style>
+</head>
+<body>
+  <div class="flex-container">
+    <div class="sidebar">
+      <div class="logo">3P ProjectFlow</div>
+      
+      <div class="nav-section">
+        <div class="nav-title">Views</div>
+        <div class="nav-link active" onclick="switchView('projects')">📊 Dashboard</div>
+        <div class="nav-link" onclick="switchView('phases')">📋 Phases</div>
+        <div class="nav-link" onclick="switchView('skills')">⚙️ Skills</div>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-title">Projects</div>
+        <div id="projectsList" style="max-height: 400px; overflow-y: auto;"></div>
+      </div>
+    </div>
+
+    <div class="main">
+      <!-- DASHBOARD VIEW -->
+      <div class="view active" id="projectsView">
+        <div class="header">
+          <h1>Projects</h1>
+          <button class="btn-main" onclick="openModal('createProject')">+ New Project</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><div class="stat-label">Total Projects</div><div class="stat-value">3</div></div>
+          <div class="stat"><div class="stat-label">In Progress</div><div class="stat-value">2</div></div>
+          <div class="stat"><div class="stat-label">Completed</div><div class="stat-value">0</div></div>
+          <div class="stat"><div class="stat-label">On Hold</div><div class="stat-value">1</div></div>
+        </div>
+
+        <div class="section-title">Active Projects</div>
+        <div class="projects-grid" id="projectsGrid"></div>
+      </div>
+
+      <!-- PHASES VIEW -->
+      <div class="view" id="phasesView">
+        <div class="header">
+          <h1 id="phaseTitle">Phases</h1>
+        </div>
+        <div id="phasesContent"></div>
+      </div>
+
+      <!-- SKILLS VIEW -->
+      <div class="view" id="skillsView">
+        <div class="header">
+          <h1>Skills Health</h1>
+        </div>
+        
+        <div class="nav-section" style="margin-bottom: 20px;">
+          <div class="nav-title">Filter by Domain</div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn-small" onclick="filterSkillsView('all')" style="background: #007aff; color: white;">✓ All (16)</button>
+            <button class="btn-small" onclick="filterSkillsView('ATEX')">🔶 ATEX (3)</button>
+            <button class="btn-small" onclick="filterSkillsView('EPLAN')">📐 EPLAN (3)</button>
+            <button class="btn-small" onclick="filterSkillsView('PLC')">🔧 PLC/SCADA (4)</button>
+            <button class="btn-small" onclick="filterSkillsView('NH3')">⚗️ NH3 (2)</button>
+            <button class="btn-small" onclick="filterSkillsView('General')">✓ General (3)</button>
+          </div>
+        </div>
+        
+        <div class="section-title" id="skillsFilterTitle">All Skills (16)</div>
+        <div class="skills-grid" id="skillsHealthGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+  <div class="modal-backdrop" id="createProjectModal" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-title">Create New Project</div>
+      <div class="form-group">
+        <label class="form-label">Project ID</label>
+        <input type="text" class="form-input" id="projId" placeholder="e.g. 3PXYZ001">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Project Name</label>
+        <input type="text" class="form-input" id="projName" placeholder="e.g. Novo Kompressor">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Customer</label>
+        <input type="text" class="form-input" id="projCustomer" placeholder="Customer name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <select class="form-select" id="projType">
+          <option value="Pharma">Pharma</option>
+          <option value="Food">Food</option>
+          <option value="Chemical">Chemical</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ATEX Required?</label>
+        <select class="form-select" id="projAtex">
+          <option value="false">No</option>
+          <option value="true">Yes</option>
+        </select>
+      </div>
+      <div class="modal-buttons">
+        <button onclick="closeModal()">Cancel</button>
+        <button class="primary" onclick="saveProject()">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="projectDetailModal" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-title" id="detailTitle">Project Details</div>
+      <div id="detailContent"></div>
+      <div class="modal-buttons">
+        <button class="primary" onclick="closeModal()" style="width: 100%;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PHASES = [
+      { id:1, name:"Modtagelse", desc:"Registrering & dokumentmodtagelse", timer:120, skills:["FIRE_EXIT_ANALYSIS"], gates:["Dokumenter modtaget","Projekt registreret","Mangler-liste sendt"], files:[] },
+      { id:2, name:"Analyse", desc:"ATEX-klassificering & projektscoping", timer:240, skills:["ATEX_RISK_ASSESSMENT","EQUIPMENT_FAILURE_ANALYSIS"], gates:["ATEX klassificering komplet","Zoner identificeret"], files:[] },
+      { id:3, name:"Data Udtræk", desc:"I/O-lister, motortabeller, klemmeplaner", timer:360, skills:["DIAGRAM_CHECK","STANDARD_COMPLIANCE"], gates:["I/O-liste komplet","Motor-tabel færdig"], files:[] },
+      { id:4, name:"Tavle Design", desc:"Tegninger fra templates med symbolik", timer:480, skills:["SCHEMATIC_REVIEW","LOGIC_FAILURE_ANALYSIS"], gates:["Tegninger genereret","Symbolik valideret"], files:[] },
+      { id:5, name:"QC Review", desc:"Fejlsøgning & validering", timer:240, skills:["SAFETY_INTERLOCK_CHECK","SYSTEM_FAILURE_SCENARIO"], gates:["QC-score ≥95%","Tegninger godkendt"], files:[] },
+      { id:6, name:"Leverandør", desc:"Overlevering & produktionsopfølgning", timer:2880, skills:["NETWORK_COMMUNICATION_CHECK","NH3_FAILURE_SCENARIO"], gates:["Leverandør bekræftet","Produktionsplan modtaget"], files:[] },
+      { id:7, name:"FAT", desc:"Factory Acceptance Test", timer:960, skills:["NH3_SAFETY_ANALYSIS","FAILURE_MODE_ANALYSIS"], gates:["FAT-protokol underskrevet"], files:[] },
+      { id:8, name:"Transport", desc:"Levering & montage", timer:960, skills:["RISK_ASSESSMENT","COMPLIANCE_CHECK"], gates:["Modtaget uden skader","Monteret"], files:[] },
+      { id:9, name:"SAT & Aflevering", desc:"Site Acceptance Test", timer:1440, skills:["FIRE_EXIT_ANALYSIS","ATEX_RISK_ASSESSMENT"], gates:["SAT-protokol underskrevet"], files:[] }
+    ];
+
+    let projects = [
+      { id:"NNDK042", name:"Novo 085 Kompressor", kunde:"Novo Nordisk", type:"Pharma", atex:true, phase:3, gates:{1:[1,1,1],2:[1,1,0],3:[0,0,0]}, files:{}, created:"2026-01-15" },
+      { id:"UBDK2407", name:"Unibio NH3 Tavle", kunde:"Unibio", type:"Chemical", atex:true, phase:5, gates:{1:[1,1,1],2:[1,1,1],3:[1,1,1],4:[1,1,1],5:[0,0]}, files:{}, created:"2025-11-20" },
+      { id:"ARLA001", name:"Arla Mejeri MCC", kunde:"Arla Foods", type:"Food", atex:false, phase:1, gates:{1:[0,0,0]}, files:{}, created:"2026-03-01" }
+    ];
+
+    let currentProject = null;
+
+    function switchView(view) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      if (view === 'projects') {
+        document.getElementById('projectsView').classList.add('active');
+        renderProjects();
+      } else if (view === 'phases') {
+        document.getElementById('phasesView').classList.add('active');
+        if (currentProject) renderPhases();
+        else alert('Select a project first');
+      } else {
+        document.getElementById('skillsView').classList.add('active');
+        filterSkillsView('all');
+      }
+    }
+
+    function filterSkillsView(domain) {
+      // Skills will be loaded from GitHub skills-index.json
+      const githubUrl = 'https://raw.githubusercontent.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation/main/_skills/skills-index.json';
+      
+      fetch(githubUrl)
+        .then(r => r.json())
+        .then(data => {
+          let skills = data.skills;
+          let title = 'All Skills (16)';
+          
+          if (domain !== 'all') {
+            skills = skills.filter(s => s.domain === domain);
+            title = `${domain} Skills (${skills.length})`;
+          }
+
+          document.getElementById('skillsFilterTitle').textContent = title;
+          
+          document.getElementById('skillsHealthGrid').innerHTML = skills.map(skill => {
+            const rate = skill.metrics.successRate || 0;
+            const health = rate >= 95 ? 'healthy' : rate >= 80 ? 'degraded' : 'failing';
+            const healthIcon = rate >= 95 ? '🟢' : rate >= 80 ? '🟡' : '🔴';
+            const trend = skill.metrics.trend || 'stable';
+            const trendIcon = trend === 'improving' ? '📈' : trend === 'declining' ? '📉' : '→';
+            
+            return `
+              <div class="skill-card">
+                <div class="skill-header">
+                  <div class="skill-name">${skill.name}</div>
+                  <div class="skill-dot ${health === 'healthy' ? 'dot-green' : health === 'degraded' ? 'dot-orange' : 'dot-red'}"></div>
+                </div>
+                <div class="skill-stats">${skill.metrics.executions} executions</div>
+                <div class="skill-rate">${rate}%</div>
+                <div style="font-size: 11px; color: #86868b; margin-top: 8px;">
+                  ${healthIcon} ${health.charAt(0).toUpperCase() + health.slice(1)}
+                  ${trendIcon} ${trend}
+                </div>
+                <div style="font-size: 10px; color: #c7c7cc; margin-top: 6px; padding-top: 8px; border-top: 1px solid #e5e5e7;">
+                  v${skill.version} • Last: ${new Date(skill.metrics.lastExecuted).toLocaleDateString()}
+                </div>
+              </div>
+            `;
+          }).join('');
+        })
+        .catch(err => {
+          console.error('Error loading skills from GitHub:', err);
+          document.getElementById('skillsHealthGrid').innerHTML = '<div style="padding: 20px; color: #86868b; grid-column: 1/-1; text-align: center;">Failed to load skills. Update GitHub URL in code and try again.</div>';
+        });
+    }
+
+    function renderProjects() {
+      document.getElementById('projectsGrid').innerHTML = projects.map(p => {
+        const completed = Object.values(p.gates).flat().filter(g => g === 1).length;
+        const total = Object.values(p.gates).flat().length;
+        const pct = total > 0 ? (completed / total) * 100 : 0;
+        return `
+          <div class="project-card" onclick="selectProject('${p.id}')">
+            <div class="proj-header">
+              <div class="proj-info">
+                <div class="proj-id">${p.id}</div>
+                <div class="proj-name">${p.name}</div>
+                <div class="proj-customer">${p.kunde}</div>
+              </div>
+              <span class="proj-status">Phase ${p.phase}</span>
+            </div>
+            <div class="phases-track">
+              <div class="phase-progress">
+                ${PHASES.slice(0,9).map((ph,i) => `<div class="phase-dot ${i+1 <= p.phase ? 'phase-done' : i+1 === p.phase ? 'phase-active' : ''}"></div>`).join('')}
+              </div>
+              <div style="font-size: 10px; color: #86868b;">Phase ${p.phase} of 9</div>
+            </div>
+            <div class="actions">
+              <button class="btn-small" onclick="viewProject(event,'${p.id}')">View</button>
+              <button class="btn-small primary" onclick="nextPhase(event,'${p.id}')">→ Next Phase</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('projectsList').innerHTML = projects.map(p => 
+        `<div class="nav-link ${currentProject === p.id ? 'active' : ''}" onclick="selectProject('${p.id}')">${p.id}</div>`
+      ).join('');
+    }
+
+    function selectProject(id) {
+      currentProject = id;
+      renderProjects();
+    }
+
+    function viewProject(e, id) {
+      e.stopPropagation();
+      const p = projects.find(x => x.id === id);
+      const completed = Object.values(p.gates).flat().filter(g => g === 1).length;
+      const total = Object.values(p.gates).flat().length;
+      
+      document.getElementById('detailTitle').textContent = p.name;
+      document.getElementById('detailContent').innerHTML = `
+        <div class="form-group">
+          <label class="form-label">Project ID</label>
+          <input type="text" class="form-input" value="${p.id}" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Customer</label>
+          <input type="text" class="form-input" value="${p.kunde}" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Current Phase</label>
+          <input type="text" class="form-input" value="Phase ${p.phase}: ${PHASES[p.phase-1].name}" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Progress</label>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <div style="flex: 1; height: 6px; background: #e5e5e7; border-radius: 3px; overflow: hidden;">
+              <div style="height: 100%; background: #34c759; width: ${(completed/total)*100}%;"></div>
+            </div>
+            <div style="font-size: 12px; color: #86868b;">${completed}/${total}</div>
+          </div>
+        </div>
+        <div style="background: #f5f5f7; padding: 12px; border-radius: 8px; font-size: 12px;">
+          <strong>Gates Completed:</strong> ${completed > 0 ? 'Yes' : 'None yet'}
+        </div>
+      `;
+      document.getElementById('projectDetailModal').classList.add('show');
+    }
+
+    function nextPhase(e, id) {
+      e.stopPropagation();
+      const p = projects.find(x => x.id === id);
+      if (p.phase < 9) {
+        p.phase++;
+        p.gates[p.phase] = new Array(PHASES[p.phase-1].gates.length).fill(0);
+        renderProjects();
+      }
+    }
+
+    function renderPhases() {
+      if (!currentProject) return;
+      const p = projects.find(x => x.id === currentProject);
+      document.getElementById('phaseTitle').textContent = p.name + ' - Phases';
+      
+      document.getElementById('phasesContent').innerHTML = PHASES.map((ph, idx) => {
+        const phGates = p.gates[ph.id] || [];
+        const completed = phGates.filter(g => g === 1).length;
+        const isActive = ph.id === p.phase;
+        
+        return `
+          <div class="phase-card">
+            <div class="phase-header">
+              <div>
+                <div class="phase-name">Phase ${ph.id}: ${ph.name}</div>
+                <div class="phase-desc">${ph.desc}</div>
+              </div>
+              <div class="phase-timer">⏱ ${ph.timer} min</div>
+            </div>
+            
+            <div class="gates-section">
+              <div class="gates-title">⚙️ Skills Used (${ph.skills.length})</div>
+              ${ph.skills.map(skill => {
+                const skillNames = {
+                  'FIRE_EXIT_ANALYSIS': '🔶 Fire Exit Analysis',
+                  'EQUIPMENT_FAILURE_ANALYSIS': '🔶 Equipment Failure Analysis',
+                  'ATEX_RISK_ASSESSMENT': '🔶 ATEX Risk Assessment',
+                  'DIAGRAM_CHECK': '📐 Diagram Check & Validation',
+                  'STANDARD_COMPLIANCE': '📐 Standard Compliance Check',
+                  'SCHEMATIC_REVIEW': '📐 Schematic Review & Analysis',
+                  'LOGIC_FAILURE_ANALYSIS': '🔧 PLC Logic Failure Analysis',
+                  'SAFETY_INTERLOCK_CHECK': '🔧 Safety Interlock Check',
+                  'SYSTEM_FAILURE_SCENARIO': '🔧 System Failure Scenario',
+                  'NETWORK_COMMUNICATION_CHECK': '🔧 Network Communication Check',
+                  'NH3_FAILURE_SCENARIO': '⚗️ NH3 Failure Scenario',
+                  'NH3_SAFETY_ANALYSIS': '⚗️ NH3 Safety Analysis',
+                  'FAILURE_MODE_ANALYSIS': '✓ Failure Mode Analysis',
+                  'RISK_ASSESSMENT': '✓ Risk Assessment',
+                  'COMPLIANCE_CHECK': '✓ Compliance Check'
+                };
+                return `<div style="padding: 6px 0; font-size: 12px; color: #1d1d1f; border-bottom: 1px solid #e5e5e7;">${skillNames[skill] || skill}</div>`;
+              }).join('')}
+            </div>
+            
+            <div class="gates-section">
+              <div class="gates-title">✓ Gates (${completed}/${ph.gates.length})</div>
+              ${ph.gates.map((gate, i) => `
+                <div class="gate">
+                  <div class="gate-check ${phGates[i] ? 'done' : ''}" onclick="toggleGate(${ph.id},${i})">
+                    ${phGates[i] ? '✓' : ''}
+                  </div>
+                  <span>${gate}</span>
+                </div>
+              `).join('')}
+            </div>
+            
+            <div class="files-section">
+              <div class="files-title">📁 Files (${Object.keys(p.files).length})</div>
+              <div class="file-input" onclick="alert('File upload functionality')">+ Add Files</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleGate(phId, gateId) {
+      if (!currentProject) return;
+      const p = projects.find(x => x.id === currentProject);
+      if (!p.gates[phId]) p.gates[phId] = new Array(PHASES[phId-1].gates.length).fill(0);
+      p.gates[phId][gateId] = p.gates[phId][gateId] ? 0 : 1;
+      renderPhases();
+    }
+
+    function openModal(type) {
+      closeModal();
+      if (type === 'createProject') {
+        document.getElementById('createProjectModal').classList.add('show');
+      }
+    }
+
+    function closeModal() {
+      document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('show'));
+    }
+
+    function saveProject() {
+      const id = document.getElementById('projId').value;
+      const name = document.getElementById('projName').value;
+      const cust = document.getElementById('projCustomer').value;
+      if (!id || !name || !cust) return alert('Fill all fields');
+      
+      projects.push({
+        id, name, kunde: cust, type: document.getElementById('projType').value,
+        atex: document.getElementById('projAtex').value === 'true', phase: 1,
+        gates: {1: [0,0,0]}, files: {}, created: new Date().toISOString().slice(0,10)
+      });
+      closeModal();
+      renderProjects();
+      document.getElementById('projId').value = '';
+      document.getElementById('projName').value = '';
+      document.getElementById('projCustomer').value = '';
+    }
+
+    renderProjects();
+  </script>
+</body>
+</html>
