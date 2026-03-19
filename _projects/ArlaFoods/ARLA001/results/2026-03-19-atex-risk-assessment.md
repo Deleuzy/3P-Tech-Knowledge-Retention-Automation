@@ -6,201 +6,231 @@
 
 ---
 
-# ATEX RISK ASSESSMENT ANALYSIS
-## TRACE HEATING Installation Documentation
+# ATEX Risk Assessment Analysis
+## TRACE HEATING Installation Document
 
 ---
 
 ## 1. EXECUTIVE SUMMARY
 
-This document is a **Danish installation guide for trace heating systems** (Heatcom Corporation A/S). While it contains safety-relevant information, **it does NOT constitute a formal ATEX risk assessment** and demonstrates significant gaps in ATEX compliance documentation for potentially hazardous area applications.
+**Assessment Status:** ⚠️ **INCOMPLETE ATEX COMPLIANCE DOCUMENTATION**
+
+This installation guide lacks formal ATEX (Directive 2014/34/EU) risk assessment documentation. While containing operational safety guidance, it does not demonstrate systematic hazard identification, risk evaluation, or ATEX-specific compliance measures for potentially explosive atmospheres.
 
 ---
 
-## 2. ATEX APPLICABILITY ASSESSMENT
+## 2. DOCUMENT CLASSIFICATION
 
-### 2.1 Missing Hazard Classification
-- **No ATEX category designation** (Category 1G, 2G, 3G for gases; 1D, 2D, 3D for dusts)
-- **No indication of intended use** in potentially explosive atmospheres
-- **No reference to ATEX Directive 2014/34/EU**
-
-### 2.2 Application Context Uncertainty
-The document does not specify:
-- Whether the trace heating system is intended for **hazardous areas**
-- What **Group** (I, II) or **Category** applies
-- If equipment is certified under ATEX or IECEx
+| Parameter | Finding |
+|-----------|---------|
+| **ATEX Declarations** | None present |
+| **Equipment Category** | Not specified |
+| **Explosive Atmosphere Reference** | Absent |
+| **Risk Assessment Framework** | Not evident |
+| **Technical File Reference** | Not included |
 
 ---
 
-## 3. CRITICAL TECHNICAL GAPS
+## 3. HAZARD IDENTIFICATION
 
-### 3.1 Electrical Safety Issues (ATEX-Relevant)
+### 3.1 Electrical Hazards (ATEX-Relevant)
 
-| Issue | ATEX Requirement | Document Status |
-|-------|------------------|-----------------|
-| **RCD Protection** | Required (max. 30 mA) | ✓ Mentioned (§5) |
-| **Earthing/Bonding** | Critical for Zone equipment | ✓ Mentioned briefly |
-| **Cable Damage Inspection** | Mandatory before use | ✓ Referenced (§5) |
-| **Surface Temperature** | Maximum limiting (T-class) | ✗ **NOT SPECIFIED** |
-| **Energy Limitation** | Intrinsic safety concepts | ✗ **ABSENT** |
-| **Fault Analysis** | Short-circuit/overload scenarios | ✗ **ABSENT** |
+| Hazard | Source | Severity |
+|--------|--------|----------|
+| Electrical shock | Improper connection/isolation | High |
+| Arc/spark generation | Cable damage, poor connections | High |
+| Overheating | Excessive current, insulation failure | High |
+| Ground faults | Missing/inadequate earthing | High |
 
-### 3.2 Missing Critical Safety Parameters
+**Critical Gap:** No ATEX surface temperature limits specified (Category 2/3 equipment typically requires T-class ratings: T1-T6).
 
-**Temperature Classification (T-Class)**
-- No maximum surface temperature declared
-- No T-class assignment (T1-T6 for ATEX II equipment)
-- Thermal runaway scenarios not addressed
+### 3.2 Thermal Hazards
 
-**Power Density & Heat Dissipation**
-- No maximum wattage per unit length specified
-- No thermal stability analysis under fault conditions
-- Relevant for ignition temperature assessment
+- Uncontrolled heat generation at junction points
+- No maximum surface temperature specification
+- No reference to ATEX temperature classifications
 
-**Cable Construction**
-- Outer sheath material suitability not verified for ATEX
-- Flex-cracking resistance not mentioned
-- Conductor insulation breakdown thresholds not provided
+### 3.3 Mechanical Hazards
+
+- Cable damage during installation
+- Inadequate strain relief
+- No mention of mechanical protection for hazardous areas
 
 ---
 
-## 4. OPERATIONAL SAFETY DEFICIENCIES
+## 4. MISSING ATEX-SPECIFIC ELEMENTS
 
-### 4.1 Installation Practices
+### 4.1 Mandatory Documentation Gaps
 
-| Requirement | Status | Risk |
-|---|---|---|
-| Authorized electrician supervision | ✓ Stated | MEDIUM |
-| Cable routing/stress management | ✓ Detailed | LOW |
-| Mechanical protection | ✓ Mentioned | MEDIUM |
-| Non-metallic pipe aluminum wrapping | ✓ Required | LOW |
-| Connection weatherproofing | ✓ Drain requirement | LOW |
-| **Surface temperature monitoring** | ✗ MISSING | **HIGH** |
-| **Thermostat/cutoff certification** | ✗ MISSING | **HIGH** |
+```
+Required for ATEX Compliance:
+✗ Equipment marking (e.g., II 2G Ex db IIC T4 Gb)
+✗ Group and Category classification
+✗ Gas/vapour/dust classification
+✗ Temperature class declaration
+✗ Conformity Assessment procedure reference
+✗ EC Declaration of Conformity
+✗ Technical Construction File reference
+```
 
-### 4.2 Documentation Deficiencies
+### 4.2 Risk Assessment Deficiencies
 
-**Missing ATEX-Critical Information:**
-- ✗ Declaration of Conformity reference
-- ✗ Technical construction file reference
-- ✗ Notified Body number (if Category 1/2)
-- ✗ Test certificates or certification marks
-- ✗ User manual ATEX-specific section
-- ✗ Maintenance procedures (ATEX requirements)
-- ✗ Inspection intervals for hazardous area use
-
----
-
-## 5. RISK ANALYSIS
-
-### 5.1 Identified Hazards
-
-**Source: Cable Thermal Characteristics**
-| Hazard | Mechanism | Consequence | Severity |
-|--------|-----------|-------------|----------|
-| **Thermal runaway** | Uncontrolled heating due to thermostat failure or overpowering | Ignition of flammable atmosphere | **CRITICAL** |
-| **Mechanical damage** | Installation stress or external impact | Insulation breach → electrical ignition | **HIGH** |
-| **Moisture ingress** | Condensation in connection boxes | Leakage current / tracking | **MEDIUM** |
-| **Inadequate bonding** | Loose grounding connection | Static discharge potential | **MEDIUM** |
-| **Overcurrent** | Fault scenarios | Heat generation above design limits | **HIGH** |
-
-### 5.2 Residual Risk Assessment
-
-**Without formal ATEX certification documentation:**
-- **Probability of hazardous failure**: INDETERMINATE (cannot verify control measures)
-- **Consequence if failure occurs**: SEVERE (potential explosion/fire)
-- **Overall Risk Level**: **UNACCEPTABLE** for use in explosive atmospheres without manufacturer ATEX certification
+| Requirement | Status | Evidence |
+|------------|--------|----------|
+| Hazard classification | Missing | No reference to IEC 60079 series |
+| Probability assessment | Missing | No risk matrix |
+| Consequence analysis | Missing | No severity classification |
+| Mitigation measures | Partial | General electrical safety only |
+| Residual risk statement | Missing | None |
 
 ---
 
-## 6. REGULATORY COMPLIANCE STATUS
+## 5. TECHNICAL SAFETY MEASURES IDENTIFIED
 
-### 6.1 ATEX Directive 2014/34/EU Assessment
+### 5.1 Present Controls
 
-| Requirement | Compliance Status |
-|-------------|-------------------|
-| **Equipment Classification** | ✗ NOT DECLARED |
-| **Conformity Assessment Module** | ✗ NOT REFERENCED |
-| **Technical Documentation** | ✗ INCOMPLETE (per Annex VIII) |
-| **Declaration of Conformity** | ✗ NOT PROVIDED |
-| **Notified Body Involvement** | ✗ NOT MENTIONED |
-| **User Instructions** | ⚠ PARTIAL (no ATEX section) |
-| **Maintenance Procedures** | ✗ NOT ATEX-SPECIFIC |
-| **Labeling/Marking** | ✗ NOT ADDRESSED |
+✓ **RCD Protection:** 30 mA residual current device mandated
+✓ **Earthing:** Ground conductor/screen connection required
+✓ **Installation Authority:** Licensed electrician requirement
+✓ **Cable Integrity:** Prohibition on damaged cable use
+✓ **Connector Drainage:** Condensation prevention specified
+✓ **Insulation Standards:** Material temperature rating verification
 
-### 6.2 EN Standards Non-Compliance
+### 5.2 Insufficient Controls for ATEX
 
-Document does not reference:
-- **EN 60079-14** (Electrical installations - hazardous areas)
-- **EN 60079-15** (Non-sparking equipment)
-- **EN 60079-19** (Repair and modification)
-- **EN 60079-7** (Increased safety equipment)
+✗ No surface temperature monitoring
+✗ No cable sheath thermal rating (e.g., PVC/XLPE limits)
+✗ No emergency isolation procedures
+✗ No maintenance schedules
+✗ No inspection/testing protocols (per IEC 60079-19)
 
 ---
 
-## 7. SPECIFIC TECHNICAL CONCERNS
+## 6. INSTALLATION PRACTICES ANALYSIS
 
-### 7.1 Thermal Stability
+### 6.1 Positive Aspects
 
-**Critical Gap**: No information on:
-- Self-regulating vs. constant-wattage cable type
-- Thermostat specifications and reliability
-- Behavior under fault conditions (short-circuit to ground)
-- Maximum sustained operating temperature
+- Physical separation guidance (avoid tension/damage)
+- Proper routing specifications
+- Thermal insulation requirements
+- Connector location (above ground level)
+- Material compatibility (aluminum foil for non-metallic pipes)
 
-**ATEX Implication**: Equipment may exceed T-class limits during faults.
+### 6.2 ATEX-Critical Gaps
 
-### 7.2 Electrical Connection Details
-
-Document specifies:
-- ✓ RCD max. 30 mA (good)
-- ✗ **No specification of circuit breaker rating**
-- ✗ **No fault loop impedance analysis**
-- ✗ **No arc flash assessment**
-- ⚠ Grounding mentioned but not detailed
-
-### 7.3 Mechanical Integrity
-
-Installation guidance addresses:
-- ✓ Cable routing
-- ✓ Support spacing (0.3 m intervals with fiberglass tape)
-- ✗ **No inspection protocol for mechanical damage in service**
-- ✗ **No guidance on repair/replacement in hazardous areas**
+| Aspect | Deficiency |
+|--------|-----------|
+| **Cable selection** | No ATEX-certified cable reference |
+| **Termination kits** | No ATEX compliance specification |
+| **Environmental conditions** | No zone classification reference |
+| **Operational limits** | No duty cycle or intermittency guidance |
+| **Inspection intervals** | Absent |
 
 ---
 
-## 8. RECOMMENDATIONS
+## 7. REGULATORY COMPLIANCE ASSESSMENT
 
-### 8.1 Immediate Actions (Use Prohibition Level)
+### 7.1 ATEX Directive 2014/34/EU Requirements
 
-**DO NOT use this equipment in ATEX zones without:**
+| Requirement | Compliance |
+|-------------|-----------|
+| Equipment category definition | ❌ Not addressed |
+| Notified Body involvement | ❌ No evidence |
+| Conformity assessment | ❌ Not documented |
+| CE marking prerequisites | ❌ Missing |
+| Technical documentation | ❌ Incomplete |
+| Instructions in Danish | ✓ Provided |
 
-1. **Manufacturer's ATEX Certification Document**
-   - Certificate of Conformity
-   - ATEX marking (II 2G Xx or equivalent)
-   - Technical construction file (per Annex VIII)
+### 7.2 Harmonized Standards Non-Compliance
 
-2. **System-Level ATEX Risk Assessment**
-   - Determine explosive atmosphere parameters (Group II vs. I)
-   - Classify zones (0/1/2 for gas; 20/21/22 for dust)
-   - Select appropriate equipment categories
-   - Verify T-class compatibility
+- **IEC 60079-14** (Electrical installations in hazardous areas) – Not referenced
+- **IEC 60079-18** (Equipment not capable of igniting explosive atmospheres) – Not assessed
+- **IEC 60079-19** (Repair, overhaul, inspection, maintenance) – No procedures
 
-3. **Authorized Installation Certification**
-   - Work by ATEX-certified installer (per EN 60079-19)
-   - Commissioning test report
-   - As-built documentation
+---
 
-### 8.2 Documentation Requirements
+## 8. RISK MATRIX
 
-Manufacturer (Heatcom) must provide:
-- [ ] ATEX Declaration of Conformity
-- [ ] Surface temperature data / T-class
-- [ ] Fault condition analysis
-- [ ] Notified Body assessment (if Cat. 1/2)
-- [ ] ATEX-specific safety supplement to installation guide
-- [ ] Maintenance/inspection procedures
+### 8.1 Current State Assessment
 
-### 8.3 Site-Level Controls
+```
+Hazard: Uncontrolled Surface Temperature in ATEX Zone
+  Probability (Installation errors): Medium-High
+  Consequence (Ignition): Critical
+  → Risk Level: UNACCEPTABLE without ATEX controls
 
-For each
+Hazard: Cable Damage During Installation
+  Probability: Medium (manual installation)
+  Consequence: Electrical ignition source
+  → Risk Level: HIGH (inadequate mitigations)
+
+Hazard: Inadequate Earthing
+  Probability: Medium (field installation)
+  Consequence: Static accumulation/electrical hazard
+  → Risk Level: HIGH
+```
+
+---
+
+## 9. RECOMMENDATIONS
+
+### 9.1 Immediate Actions Required
+
+1. **Obtain ATEX Declaration of Conformity** from manufacturer
+2. **Verify Equipment Category:**
+   - Category 2G (Group II, Category 2, Gas)
+   - Category 3G (if lower risk environment)
+3. **Specify Temperature Class** (T1-T6 rating per IEC 60079-0)
+4. **Provide Technical File** reference with:
+   - Surface temperature calculations
+   - Cable thermal specifications
+   - Electrical schematic (ATEX-compliant)
+
+### 9.2 Documentation Enhancements
+
+| Addition | Priority |
+|----------|----------|
+| Surface temperature limits (°C) | **CRITICAL** |
+| ATEX marking/classification | **CRITICAL** |
+| Zone suitability statement | **CRITICAL** |
+| Cable sheath material temp. rating | **HIGH** |
+| Inspection/maintenance schedule (IEC 60079-19) | **HIGH** |
+| Fault scenario analysis | **MEDIUM** |
+
+### 9.3 Installation Procedure Modifications
+
+```
+Add to installation guide:
+- Pre-installation ATEX compliance checklist
+- Temperature monitoring during commissioning
+- Photo documentation of cable routing
+- Earthing resistance testing (target: <1 Ω)
+- Annual inspection protocol
+- Defect reporting procedure
+```
+
+---
+
+## 10. RESIDUAL RISK STATEMENT
+
+**Current State:** Without ATEX certification documentation and temperature class specification, **residual risk cannot be quantified or accepted** for use in explosive atmospheres.
+
+**Required Certification Level:** Formal ATEX Annex VIII (Notified Body) technical documentation or manufacturer's Declaration of Conformity under Annex VI.
+
+---
+
+## 11. CONCLUSIONS
+
+| Finding | Assessment |
+|---------|------------|
+| **ATEX Readiness** | Non-compliant |
+| **Functional Safety** | Partial (general electrical safety only) |
+| **Explosive Atmosphere Suitability** | **Unverified** |
+| **Installation Risk** | **HIGH** without ATEX controls |
+
+**Recommendation:** **DO NOT DEPLOY** in classified hazardous areas (ATEX Zones) until formal ATEX compliance documentation is obtained and installation procedures are amended to reference ATEX standards.
+
+---
+
+**Document Assessment Date:** [Current]  
+**Assessor Status:** Technical compliance review only – legal/regulatory interpretation requires competent authority consultation.
