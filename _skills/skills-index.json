@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-03-18T00:00:00Z",
+  "lastUpdated": "2026-03-19T12:26:29.440519Z",
   "repository": "https://github.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation",
   "rawContentUrl": "https://raw.githubusercontent.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation/main",
   "skills": [
@@ -12,8 +12,16 @@
       "file": "_skills/ATEX/fire-exit-analysis.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["Building layout", "Exit configuration", "Applicable standards"],
-      "outputs": ["Compliance assessment", "Risk findings", "Action items"],
+      "inputs": [
+        "Building layout",
+        "Exit configuration",
+        "Applicable standards"
+      ],
+      "outputs": [
+        "Compliance assessment",
+        "Risk findings",
+        "Action items"
+      ],
       "metrics": {
         "executions": 42,
         "successRate": 95,
@@ -39,8 +47,16 @@
       "file": "_skills/ATEX/equipment-failure-analysis.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["Equipment type", "Failure description", "Operating conditions"],
-      "outputs": ["Root cause", "Severity assessment", "Prevention measures"],
+      "inputs": [
+        "Equipment type",
+        "Failure description",
+        "Operating conditions"
+      ],
+      "outputs": [
+        "Root cause",
+        "Severity assessment",
+        "Prevention measures"
+      ],
       "metrics": {
         "executions": 38,
         "successRate": 92,
@@ -66,8 +82,16 @@
       "file": "_skills/ATEX/atex-risk-assessment.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["Area description", "Hazard type", "Equipment list"],
-      "outputs": ["Risk level", "Zone classification", "Required improvements"],
+      "inputs": [
+        "Area description",
+        "Hazard type",
+        "Equipment list"
+      ],
+      "outputs": [
+        "Risk level",
+        "Zone classification",
+        "Required improvements"
+      ],
       "metrics": {
         "executions": 55,
         "successRate": 98,
@@ -93,8 +117,16 @@
       "file": "_skills/EPLAN/diagram-check.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["Diagram details", "Standards", "Concerns"],
-      "outputs": ["Issues list", "Severity ranking", "Recommended fixes"],
+      "inputs": [
+        "Diagram details",
+        "Standards",
+        "Concerns"
+      ],
+      "outputs": [
+        "Issues list",
+        "Severity ranking",
+        "Recommended fixes"
+      ],
       "metrics": {
         "executions": 67,
         "successRate": 89,
@@ -126,8 +158,16 @@
       "file": "_skills/EPLAN/standard-compliance.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["System description", "Applicable standards", "Current setup"],
-      "outputs": ["Compliance summary", "Gap analysis", "Corrective actions"],
+      "inputs": [
+        "System description",
+        "Applicable standards",
+        "Current setup"
+      ],
+      "outputs": [
+        "Compliance summary",
+        "Gap analysis",
+        "Corrective actions"
+      ],
       "metrics": {
         "executions": 44,
         "successRate": 91,
@@ -153,8 +193,16 @@
       "file": "_skills/EPLAN/schematic-review.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["Schematic details", "Requirements", "Component specs"],
-      "outputs": ["Design assessment", "Component evaluation", "Improvements"],
+      "inputs": [
+        "Schematic details",
+        "Requirements",
+        "Component specs"
+      ],
+      "outputs": [
+        "Design assessment",
+        "Component evaluation",
+        "Improvements"
+      ],
       "metrics": {
         "executions": 35,
         "successRate": 88,
@@ -180,8 +228,16 @@
       "file": "_skills/PLC-SCADA/logic-failure-analysis.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["PLC type", "Program code", "Issue description"],
-      "outputs": ["Root cause", "Corrected logic", "Prevention measures"],
+      "inputs": [
+        "PLC type",
+        "Program code",
+        "Issue description"
+      ],
+      "outputs": [
+        "Root cause",
+        "Corrected logic",
+        "Prevention measures"
+      ],
       "metrics": {
         "executions": 28,
         "successRate": 86,
@@ -207,8 +263,16 @@
       "file": "_skills/PLC-SCADA/safety-interlock-check.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["System description", "Safety logic", "Failure scenarios"],
-      "outputs": ["Safety assessment", "Issues found", "Recommendations"],
+      "inputs": [
+        "System description",
+        "Safety logic",
+        "Failure scenarios"
+      ],
+      "outputs": [
+        "Safety assessment",
+        "Issues found",
+        "Recommendations"
+      ],
       "metrics": {
         "executions": 51,
         "successRate": 94,
@@ -234,8 +298,16 @@
       "file": "_skills/PLC-SCADA/system-failure-scenario.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["System description", "Failure scenario", "Constraints"],
-      "outputs": ["Failure progression", "Safety assessment", "Recommendations"],
+      "inputs": [
+        "System description",
+        "Failure scenario",
+        "Constraints"
+      ],
+      "outputs": [
+        "Failure progression",
+        "Safety assessment",
+        "Recommendations"
+      ],
       "metrics": {
         "executions": 32,
         "successRate": 85,
@@ -261,8 +333,16 @@
       "file": "_skills/PLC-SCADA/network-communication-check.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["Network architecture", "Communication protocol", "Components"],
-      "outputs": ["Architecture assessment", "Weaknesses found", "Improvements"],
+      "inputs": [
+        "Network architecture",
+        "Communication protocol",
+        "Components"
+      ],
+      "outputs": [
+        "Architecture assessment",
+        "Weaknesses found",
+        "Improvements"
+      ],
       "metrics": {
         "executions": 26,
         "successRate": 90,
@@ -288,8 +368,16 @@
       "file": "_skills/NH3/failure-scenario.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["System description", "Failure type", "Personnel info"],
-      "outputs": ["Scenario progression", "Hazard assessment", "Prevention measures"],
+      "inputs": [
+        "System description",
+        "Failure type",
+        "Personnel info"
+      ],
+      "outputs": [
+        "Scenario progression",
+        "Hazard assessment",
+        "Prevention measures"
+      ],
       "metrics": {
         "executions": 19,
         "successRate": 84,
@@ -315,8 +403,16 @@
       "file": "_skills/NH3/safety-analysis.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["System overview", "Safety devices", "Operating procedures"],
-      "outputs": ["Safety assessment", "Hazard ranking", "Improvements needed"],
+      "inputs": [
+        "System overview",
+        "Safety devices",
+        "Operating procedures"
+      ],
+      "outputs": [
+        "Safety assessment",
+        "Hazard ranking",
+        "Improvements needed"
+      ],
       "metrics": {
         "executions": 23,
         "successRate": 93,
@@ -342,8 +438,16 @@
       "file": "_skills/General/failure-mode-analysis.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["System description", "Failure modes", "Context"],
-      "outputs": ["Failure modes list", "Root causes", "Prevention recommendations"],
+      "inputs": [
+        "System description",
+        "Failure modes",
+        "Context"
+      ],
+      "outputs": [
+        "Failure modes list",
+        "Root causes",
+        "Prevention recommendations"
+      ],
       "metrics": {
         "executions": 41,
         "successRate": 87,
@@ -369,8 +473,16 @@
       "file": "_skills/General/risk-assessment.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["Hazards list", "Likelihood", "Consequences"],
-      "outputs": ["Risk matrix", "Hazard ranking", "Control recommendations"],
+      "inputs": [
+        "Hazards list",
+        "Likelihood",
+        "Consequences"
+      ],
+      "outputs": [
+        "Risk matrix",
+        "Hazard ranking",
+        "Control recommendations"
+      ],
       "metrics": {
         "executions": 58,
         "successRate": 96,
@@ -396,8 +508,16 @@
       "file": "_skills/General/compliance-check.md",
       "version": "1.0.0",
       "updatedAt": "2026-03-18",
-      "inputs": ["System description", "Applicable standards", "Current setup"],
-      "outputs": ["Compliance summary", "Identified gaps", "Corrective actions"],
+      "inputs": [
+        "System description",
+        "Applicable standards",
+        "Current setup"
+      ],
+      "outputs": [
+        "Compliance summary",
+        "Identified gaps",
+        "Corrective actions"
+      ],
       "metrics": {
         "executions": 49,
         "successRate": 89,
@@ -414,6 +534,26 @@
           "impact": "89% success rate"
         }
       ]
+    },
+    {
+      "name": "Trace Heating Check",
+      "slug": "trace-heating-check",
+      "domain": "Electrical",
+      "version": "v1",
+      "file": "_skills/Electrical/trace-heating-check-v1.md",
+      "history": [
+        {
+          "version": "v1",
+          "file": "_skills/Electrical/trace-heating-check-v1.md",
+          "date": "2026-03-19T12:26:29.440519Z"
+        }
+      ],
+      "metrics": {
+        "executions": 0,
+        "successRate": 100,
+        "trend": "stable",
+        "lastExecuted": "2026-03-19T12:26:29.440519Z"
+      }
     }
   ]
 }
