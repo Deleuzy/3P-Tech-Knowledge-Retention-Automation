@@ -1,579 +1,126 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-03-19T12:31:30.024932Z",
-  "repository": "https://github.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation",
-  "rawContentUrl": "https://raw.githubusercontent.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation/main",
+  "lastUpdated": "2026-03-20",
   "skills": [
     {
-      "id": "FIRE_EXIT_ANALYSIS",
-      "domain": "ATEX",
-      "name": "Fire Exit Analysis",
-      "description": "Analyze fire exits, egress paths, and evacuation routes against standards",
-      "file": "_skills/ATEX/fire-exit-analysis.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "Building layout",
-        "Exit configuration",
-        "Applicable standards"
-      ],
-      "outputs": [
-        "Compliance assessment",
-        "Risk findings",
-        "Action items"
-      ],
-      "metrics": {
-        "executions": 42,
-        "successRate": 95,
-        "avgExecutionTime": 45,
-        "health": "healthy",
-        "trend": "improving",
-        "lastExecuted": "2026-03-18T14:30:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "95% success rate"
-        }
-      ]
-    },
-    {
-      "id": "EQUIPMENT_FAILURE_ANALYSIS",
-      "domain": "ATEX",
-      "name": "Equipment Failure Analysis",
-      "description": "Analyze equipment failures, root causes, and severity",
-      "file": "_skills/ATEX/equipment-failure-analysis.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "Equipment type",
-        "Failure description",
-        "Operating conditions"
-      ],
-      "outputs": [
-        "Root cause",
-        "Severity assessment",
-        "Prevention measures"
-      ],
-      "metrics": {
-        "executions": 38,
-        "successRate": 92,
-        "avgExecutionTime": 52,
-        "health": "healthy",
-        "trend": "stable",
-        "lastExecuted": "2026-03-18T13:15:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "92% success rate"
-        }
-      ]
-    },
-    {
-      "id": "ATEX_RISK_ASSESSMENT",
-      "domain": "ATEX",
-      "name": "ATEX Risk Assessment",
-      "description": "Assess risk in ATEX hazardous areas with zone classification",
+      "name": "Atex Risk Assessment",
       "file": "_skills/ATEX/atex-risk-assessment.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "Area description",
-        "Hazard type",
-        "Equipment list"
-      ],
-      "outputs": [
-        "Risk level",
-        "Zone classification",
-        "Required improvements"
-      ],
-      "metrics": {
-        "executions": 55,
-        "successRate": 98,
-        "avgExecutionTime": 38,
-        "health": "healthy",
-        "trend": "improving",
-        "lastExecuted": "2026-03-18T12:45:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "98% success rate"
-        }
-      ]
+      "domain": "ATEX",
+      "version": "v1.0.0"
     },
     {
-      "id": "DIAGRAM_CHECK",
-      "domain": "EPLAN",
-      "name": "Diagram Check & Validation",
-      "description": "Check electrical diagrams for errors, compliance, and issues",
+      "name": "Equipment Failure Analysis",
+      "file": "_skills/ATEX/equipment-failure-analysis.md",
+      "domain": "ATEX",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "Fire Exit Analysis",
+      "file": "_skills/ATEX/fire-exit-analysis.md",
+      "domain": "ATEX",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "Diagram Check",
       "file": "_skills/EPLAN/diagram-check.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "Diagram details",
-        "Standards",
-        "Concerns"
-      ],
-      "outputs": [
-        "Issues list",
-        "Severity ranking",
-        "Recommended fixes"
-      ],
-      "metrics": {
-        "executions": 67,
-        "successRate": 89,
-        "avgExecutionTime": 48,
-        "health": "degraded",
-        "trend": "improving",
-        "lastExecuted": "2026-03-18T14:00:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "89% success rate"
-        },
-        {
-          "date": "2026-03-15",
-          "version": "1.0.1",
-          "change": "Improved symbol detection",
-          "impact": "+2%"
-        }
-      ]
+      "domain": "EPLAN",
+      "version": "v1.0.0"
     },
     {
-      "id": "STANDARD_COMPLIANCE",
-      "domain": "EPLAN",
-      "name": "Standard Compliance Check",
-      "description": "Verify compliance with electrical standards and regulations",
-      "file": "_skills/EPLAN/standard-compliance.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "System description",
-        "Applicable standards",
-        "Current setup"
-      ],
-      "outputs": [
-        "Compliance summary",
-        "Gap analysis",
-        "Corrective actions"
-      ],
-      "metrics": {
-        "executions": 44,
-        "successRate": 91,
-        "avgExecutionTime": 42,
-        "health": "healthy",
-        "trend": "stable",
-        "lastExecuted": "2026-03-18T11:30:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "91% success rate"
-        }
-      ]
-    },
-    {
-      "id": "SCHEMATIC_REVIEW",
-      "domain": "EPLAN",
-      "name": "Schematic Review & Analysis",
-      "description": "Review electrical schematics for design correctness",
+      "name": "Schematic Review",
       "file": "_skills/EPLAN/schematic-review.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "Schematic details",
-        "Requirements",
-        "Component specs"
-      ],
-      "outputs": [
-        "Design assessment",
-        "Component evaluation",
-        "Improvements"
-      ],
-      "metrics": {
-        "executions": 35,
-        "successRate": 88,
-        "avgExecutionTime": 55,
-        "health": "degraded",
-        "trend": "stable",
-        "lastExecuted": "2026-03-18T10:15:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "88% success rate"
-        }
-      ]
+      "domain": "EPLAN",
+      "version": "v1.0.0"
     },
     {
-      "id": "LOGIC_FAILURE_ANALYSIS",
-      "domain": "PLC-SCADA",
-      "name": "PLC Logic Failure Analysis",
-      "description": "Analyze PLC program logic failures and issues",
-      "file": "_skills/PLC-SCADA/logic-failure-analysis.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "PLC type",
-        "Program code",
-        "Issue description"
-      ],
-      "outputs": [
-        "Root cause",
-        "Corrected logic",
-        "Prevention measures"
-      ],
-      "metrics": {
-        "executions": 28,
-        "successRate": 86,
-        "avgExecutionTime": 62,
-        "health": "degraded",
-        "trend": "improving",
-        "lastExecuted": "2026-03-18T13:45:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "86% success rate"
-        }
-      ]
+      "name": "Standard Compliance",
+      "file": "_skills/EPLAN/standard-compliance.md",
+      "domain": "EPLAN",
+      "version": "v1.0.0"
     },
     {
-      "id": "SAFETY_INTERLOCK_CHECK",
-      "domain": "PLC-SCADA",
-      "name": "Safety Interlock Check",
-      "description": "Verify safety interlocks are adequate and working",
-      "file": "_skills/PLC-SCADA/safety-interlock-check.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "System description",
-        "Safety logic",
-        "Failure scenarios"
-      ],
-      "outputs": [
-        "Safety assessment",
-        "Issues found",
-        "Recommendations"
-      ],
-      "metrics": {
-        "executions": 51,
-        "successRate": 94,
-        "avgExecutionTime": 44,
-        "health": "healthy",
-        "trend": "improving",
-        "lastExecuted": "2026-03-18T12:30:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "94% success rate"
-        }
-      ]
-    },
-    {
-      "id": "SYSTEM_FAILURE_SCENARIO",
-      "domain": "PLC-SCADA",
-      "name": "System Failure Scenario",
-      "description": "Simulate what happens if a system component fails",
-      "file": "_skills/PLC-SCADA/system-failure-scenario.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "System description",
-        "Failure scenario",
-        "Constraints"
-      ],
-      "outputs": [
-        "Failure progression",
-        "Safety assessment",
-        "Recommendations"
-      ],
-      "metrics": {
-        "executions": 32,
-        "successRate": 85,
-        "avgExecutionTime": 58,
-        "health": "degraded",
-        "trend": "stable",
-        "lastExecuted": "2026-03-18T14:15:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "85% success rate"
-        }
-      ]
-    },
-    {
-      "id": "NETWORK_COMMUNICATION_CHECK",
-      "domain": "PLC-SCADA",
-      "name": "Network Communication Check",
-      "description": "Analyze PLC/SCADA network and communication systems",
-      "file": "_skills/PLC-SCADA/network-communication-check.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "Network architecture",
-        "Communication protocol",
-        "Components"
-      ],
-      "outputs": [
-        "Architecture assessment",
-        "Weaknesses found",
-        "Improvements"
-      ],
-      "metrics": {
-        "executions": 26,
-        "successRate": 90,
-        "avgExecutionTime": 40,
-        "health": "healthy",
-        "trend": "improving",
-        "lastExecuted": "2026-03-18T11:00:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "90% success rate"
-        }
-      ]
-    },
-    {
-      "id": "NH3_FAILURE_SCENARIO",
-      "domain": "NH3",
-      "name": "NH3 Failure Scenario",
-      "description": "Analyze ammonia system failure scenarios",
-      "file": "_skills/NH3/failure-scenario.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "System description",
-        "Failure type",
-        "Personnel info"
-      ],
-      "outputs": [
-        "Scenario progression",
-        "Hazard assessment",
-        "Prevention measures"
-      ],
-      "metrics": {
-        "executions": 19,
-        "successRate": 84,
-        "avgExecutionTime": 50,
-        "health": "degraded",
-        "trend": "improving",
-        "lastExecuted": "2026-03-18T09:45:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "84% success rate"
-        }
-      ]
-    },
-    {
-      "id": "NH3_SAFETY_ANALYSIS",
-      "domain": "NH3",
-      "name": "NH3 Safety Analysis",
-      "description": "Assess ammonia system safety and compliance",
-      "file": "_skills/NH3/safety-analysis.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "System overview",
-        "Safety devices",
-        "Operating procedures"
-      ],
-      "outputs": [
-        "Safety assessment",
-        "Hazard ranking",
-        "Improvements needed"
-      ],
-      "metrics": {
-        "executions": 23,
-        "successRate": 93,
-        "avgExecutionTime": 46,
-        "health": "healthy",
-        "trend": "stable",
-        "lastExecuted": "2026-03-18T08:30:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "93% success rate"
-        }
-      ]
-    },
-    {
-      "id": "FAILURE_MODE_ANALYSIS",
-      "domain": "General",
-      "name": "Failure Mode Analysis",
-      "description": "Analyze all possible failure modes of a system",
-      "file": "_skills/General/failure-mode-analysis.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "System description",
-        "Failure modes",
-        "Context"
-      ],
-      "outputs": [
-        "Failure modes list",
-        "Root causes",
-        "Prevention recommendations"
-      ],
-      "metrics": {
-        "executions": 41,
-        "successRate": 87,
-        "avgExecutionTime": 52,
-        "health": "degraded",
-        "trend": "improving",
-        "lastExecuted": "2026-03-18T13:20:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "87% success rate"
-        }
-      ]
-    },
-    {
-      "id": "RISK_ASSESSMENT",
-      "domain": "General",
-      "name": "Risk Assessment",
-      "description": "Assess overall risk in any situation",
-      "file": "_skills/General/risk-assessment.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "Hazards list",
-        "Likelihood",
-        "Consequences"
-      ],
-      "outputs": [
-        "Risk matrix",
-        "Hazard ranking",
-        "Control recommendations"
-      ],
-      "metrics": {
-        "executions": 58,
-        "successRate": 96,
-        "avgExecutionTime": 35,
-        "health": "healthy",
-        "trend": "improving",
-        "lastExecuted": "2026-03-18T15:00:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "96% success rate"
-        }
-      ]
-    },
-    {
-      "id": "COMPLIANCE_CHECK",
-      "domain": "General",
-      "name": "Compliance Check",
-      "description": "Check compliance with standards or regulations",
-      "file": "_skills/General/compliance-check.md",
-      "version": "1.0.0",
-      "updatedAt": "2026-03-18",
-      "inputs": [
-        "System description",
-        "Applicable standards",
-        "Current setup"
-      ],
-      "outputs": [
-        "Compliance summary",
-        "Identified gaps",
-        "Corrective actions"
-      ],
-      "metrics": {
-        "executions": 49,
-        "successRate": 89,
-        "avgExecutionTime": 43,
-        "health": "degraded",
-        "trend": "stable",
-        "lastExecuted": "2026-03-18T10:50:00Z"
-      },
-      "improvements": [
-        {
-          "date": "2026-03-18",
-          "version": "1.0.0",
-          "change": "Initial release",
-          "impact": "89% success rate"
-        }
-      ]
-    },
-    {
-      "name": "Trace Heating Check",
-      "slug": "trace-heating-check",
-      "domain": "Electrical",
-      "version": "v1",
+      "name": "Trace Heating Check V1",
       "file": "_skills/Electrical/trace-heating-check-v1.md",
-      "history": [
-        {
-          "version": "v1",
-          "file": "_skills/Electrical/trace-heating-check-v1.md",
-          "date": "2026-03-19T12:26:29.440519Z"
-        }
-      ],
-      "metrics": {
-        "executions": 0,
-        "successRate": 100,
-        "trend": "stable",
-        "lastExecuted": "2026-03-19T12:26:29.440519Z"
-      }
+      "domain": "Electrical",
+      "version": "v1.0.0"
     },
     {
-      "name": "Trace Heating Installation Review",
-      "slug": "trace-heating-installation-review",
-      "domain": "Electrical",
-      "version": "v1",
+      "name": "Trace Heating Installation Review V1",
       "file": "_skills/Electrical/trace-heating-installation-review-v1.md",
-      "history": [
-        {
-          "version": "v1",
-          "file": "_skills/Electrical/trace-heating-installation-review-v1.md",
-          "date": "2026-03-19T12:31:30.024932Z"
-        }
-      ],
-      "metrics": {
-        "executions": 0,
-        "successRate": 100,
-        "trend": "stable",
-        "lastExecuted": "2026-03-19T12:31:30.024932Z"
-      }
+      "domain": "Electrical",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "Compliance Check",
+      "file": "_skills/General/compliance-check.md",
+      "domain": "General",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "Debug Test V1",
+      "file": "_skills/General/debug-test-v1.md",
+      "domain": "General",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "Failure Mode Analysis",
+      "file": "_skills/General/failure-mode-analysis.md",
+      "domain": "General",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "Risk Assessment",
+      "file": "_skills/General/risk-assessment.md",
+      "domain": "General",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "Test",
+      "file": "_skills/General/test.md",
+      "domain": "General",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "Failure Scenario",
+      "file": "_skills/NH3/failure-scenario.md",
+      "domain": "NH3",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "Nh3 Risk Assessment",
+      "file": "_skills/NH3/nh3-risk-assessment.md",
+      "domain": "NH3",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "Safety Analysis",
+      "file": "_skills/NH3/safety-analysis.md",
+      "domain": "NH3",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "Logic Failure Analysis",
+      "file": "_skills/PLC-SCADA/logic-failure-analysis.md",
+      "domain": "PLC-SCADA",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "Network Communication Check",
+      "file": "_skills/PLC-SCADA/network-communication-check.md",
+      "domain": "PLC-SCADA",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "Safety Interlock Check",
+      "file": "_skills/PLC-SCADA/safety-interlock-check.md",
+      "domain": "PLC-SCADA",
+      "version": "v1.0.0"
+    },
+    {
+      "name": "System Failure Scenario",
+      "file": "_skills/PLC-SCADA/system-failure-scenario.md",
+      "domain": "PLC-SCADA",
+      "version": "v1.0.0"
     }
   ]
 }
