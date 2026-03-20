@@ -1,30 +1,41 @@
 {
-  "updated": "2026-03-20",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-20",
   "folders": [
+    {
+      "name": "ATEX",
+      "files": [
+        "atex-zone-classification"
+      ]
+    },
+    {
+      "name": "EPLAN",
+      "files": [
+        "eplan-diagram-conventions"
+      ]
+    },
+    {
+      "name": "General",
+      "files": [
+        "installation-trace-heating-xxxxxxxx",
+        "risk-assessment-criteria"
+      ]
+    },
     {
       "name": "NH3",
       "files": [
-        "nh3-alarm-setpoints",
         "inspektionsrapport-prainspektion-80-nh3-anlaeg-unibio-tng-2026-02-19",
+        "installation-trace-heating-xxxxxxxx",
+        "nh3-alarm-setpoints",
         "prainspektion-20260312",
         "unibio-pre-inspektion-ibrugtagningskontrol-indledende-inspektion-80-nh3-anlaeg-2026-03-02"
       ]
     },
     {
-      "name": "ATEX",
-      "files": ["atex-zone-classification"]
-    },
-    {
-      "name": "EPLAN",
-      "files": ["eplan-diagram-conventions"]
-    },
-    {
       "name": "Trace-Heating",
-      "files": ["trace-heating-installation"]
-    },
-    {
-      "name": "General",
-      "files": ["risk-assessment-criteria"]
+      "files": [
+        "trace-heating-installation"
+      ]
     }
   ]
 }
