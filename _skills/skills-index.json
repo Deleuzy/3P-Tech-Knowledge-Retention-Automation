@@ -69,6 +69,12 @@
       "version": "v1.0.0"
     },
     {
+      "name": "Regler",
+      "file": "_skills/General/regler.md",
+      "domain": "General",
+      "version": "v1.0.0"
+    },
+    {
       "name": "Risk Assessment",
       "file": "_skills/General/risk-assessment.md",
       "domain": "General",
