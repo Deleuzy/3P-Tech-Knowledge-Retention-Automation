@@ -127,6 +127,12 @@
       "file": "_skills/PLC-SCADA/system-failure-scenario.md",
       "domain": "PLC-SCADA",
       "version": "v1.0.0"
+    },
+    {
+      "name": "Regler",
+      "file": "_skills/Trace-Heating/regler.md",
+      "domain": "Trace-Heating",
+      "version": "v1.0.0"
     }
   ]
 }
