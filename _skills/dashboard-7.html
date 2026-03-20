@@ -2229,7 +2229,7 @@ Return ONLY the skill prompt text. No explanation, no preamble, no markdown fenc
       if (isImage) {
         const reader = new FileReader();
         reader.onload = e => {
-          _srImage = { base64: e.target.result.split(',')[1], mediaType: file.type };
+          _srImage = { base64: e.target.result.split(',')[1], mimeType: file.type || 'image/jpeg' };
           document.getElementById('srDocText').value = '';
           document.getElementById('srDocText').placeholder = '(image loaded — Claude will analyse it visually)';
         };
