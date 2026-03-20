@@ -4,162 +4,890 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>3P ProjectFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; background: #fafafa; color: #1d1d1f; }
-    .flex { display: flex; }
-    .flex-container { display: flex; height: 100vh; }
-    
-    .sidebar { width: 260px; background: white; border-right: 1px solid #e5e5e7; padding: 20px; overflow-y: auto; }
-    .logo { font-size: 18px; font-weight: 700; margin-bottom: 30px; }
-    .nav-section { margin-bottom: 25px; }
-    .nav-title { font-size: 11px; font-weight: 600; color: #86868b; text-transform: uppercase; margin-bottom: 10px; }
-    .nav-link { padding: 10px 12px; margin-bottom: 6px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.2s; }
-    .nav-link:hover { background: #f5f5f7; }
-    .nav-link.active { background: #007aff; color: white; }
-    
-    .main { flex: 1; overflow-y: auto; padding: 40px; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-    .header h1 { font-size: 28px; font-weight: 700; }
-    .btn-main { padding: 10px 18px; background: #007aff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; }
-    .btn-main:hover { background: #0051d5; }
-    
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 30px; }
-    .stat { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5e5e7; }
-    .stat-label { font-size: 12px; color: #86868b; }
-    .stat-value { font-size: 28px; font-weight: 700; margin-top: 5px; }
-    
-    .section-title { font-size: 18px; font-weight: 600; margin: 30px 0 15px; }
-    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 12px; }
-    
-    .project-card { background: white; border: 1px solid #e5e5e7; border-radius: 12px; padding: 20px; cursor: pointer; }
-    .proj-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    ::selection { background: #5b8db544; }
+
+    :root {
+      --bg: #080809;
+      --bg2: #0f0f11;
+      --bg3: #161618;
+      --border: #222226;
+      --border2: #2a2a2e;
+      --text: #e8e8ed;
+      --text2: #8e8e99;
+      --text3: #4a4a55;
+      --accent: #5b8db5;
+      --accent2: #7aafd4;
+      --blue: #3b82f6;
+      --green: #10b981;
+      --red: #ef4444;
+      --orange: #f97316;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    @keyframes scanline {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* Subtle dot grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, #ffffff06 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .flex-container { display: flex; height: 100vh; position: relative; z-index: 1; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 240px;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      padding: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .logo {
+      padding: 22px 20px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo-mark {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .logo-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+    .logo-name span { color: var(--accent); }
+
+    .sidebar-nav { padding: 16px 12px; flex: 1; }
+    .nav-section { margin-bottom: 24px; }
+    .nav-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 6px;
+      padding: 0 8px;
+    }
+    .nav-link {
+      padding: 9px 12px;
+      margin-bottom: 1px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text2);
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-link:hover { background: var(--bg3); color: var(--text); }
+    .nav-link.active { background: #5b8db514; color: var(--accent); }
+
+    /* ── RUN SKILL ── */
+    .run-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+    .run-col { display: flex; flex-direction: column; gap: 12px; }
+    .run-output {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+      padding: 20px; min-height: 300px; font-size: 13px; color: var(--text2);
+      white-space: pre-wrap; line-height: 1.6; overflow-y: auto;
+      font-family: 'Outfit', sans-serif;
+    }
+    .run-output.loading { color: var(--text3); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+    .api-key-banner {
+      background: #ef444415; border: 1px solid #ef444433; border-radius: 8px;
+      padding: 12px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+      color: var(--red); margin-bottom: 16px;
+    }
+    .api-key-banner.ok { background: #10b98115; border-color: #10b98133; color: var(--green); }
+    .nav-link .nav-icon { font-size: 14px; width: 18px; text-align: center; }
+
+    .sidebar-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: var(--text3);
+      letter-spacing: 0.5px;
+    }
+    .sidebar-footer .dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+
+    /* ── MAIN ── */
+    .main { flex: 1; overflow-y: auto; background: var(--bg); }
+    .main-inner { padding: 36px 40px; animation: fadeUp 0.35s ease; min-height: 100%; }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 32px;
+    }
+    .page-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      color: var(--text);
+      line-height: 1;
+    }
+    .page-subtitle {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text3);
+      margin-top: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-main {
+      padding: 13px 26px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+      font-family: 'Outfit', sans-serif;
+      transition: all 0.15s;
+      letter-spacing: 0.2px;
+    }
+    .btn-main:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 16px #5b8db544; }
+
+    /* ── STATS ── */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 32px; }
+    .stat {
+      background: var(--bg2);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .stat:hover { border-color: var(--border2); }
+    .stat:hover::before { opacity: 1; }
+    .stat-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: var(--text3);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .stat-value { font-size: 36px; font-weight: 800; margin-top: 8px; color: var(--text); letter-spacing: -1px; }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin: 28px 0 14px;
+    }
+
+    /* ── PROJECT CARDS ── */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
+    .project-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      animation: fadeUp 0.35s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      opacity: 0;
+      background: radial-gradient(circle at 50% 0%, #f59e0b0a, transparent 60%);
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .project-card:hover { border-color: #f59e0b33; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+    .project-card:hover::after { opacity: 1; }
+
+    .proj-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
     .proj-info { flex: 1; }
-    .proj-id { font-size: 11px; color: #86868b; font-weight: 600; }
-    .proj-name { font-size: 16px; font-weight: 600; margin: 3px 0; }
-    .proj-customer { font-size: 13px; color: #86868b; }
-    .proj-status { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; background: #cfe2ff; color: #084298; }
-    
-    .phases-track { margin: 16px 0; }
-    .phase-progress { display: flex; gap: 2px; margin-bottom: 8px; }
-    .phase-dot { width: 16px; height: 16px; border-radius: 50%; background: #e5e5e7; font-size: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
-    .phase-done { background: #34c759; }
-    .phase-active { background: #007aff; }
-    
-    .phase-label { font-size: 10px; color: #86868b; }
-    
-    .actions { display: flex; gap: 8px; margin-top: 12px; }
-    .btn-small { flex: 1; padding: 8px; border: 1px solid #e5e5e7; background: white; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; }
-    .btn-small:hover { border-color: #007aff; color: #007aff; }
-    .btn-small.primary { background: #007aff; color: white; border-color: #007aff; }
-    .btn-small.primary:hover { background: #0051d5; }
-    
+    .proj-id {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    .proj-name { font-size: 15px; font-weight: 700; margin: 4px 0 2px; color: var(--text); letter-spacing: -0.2px; }
+    .proj-customer { font-size: 12px; color: var(--text3); font-weight: 400; }
+    .proj-status {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 5px;
+      background: #f59e0b14;
+      color: var(--accent);
+      border: 1px solid #f59e0b33;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .phases-track { margin: 14px 0; }
+    .phase-progress { display: flex; gap: 4px; margin-bottom: 6px; }
+    .phase-dot {
+      flex: 1;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border2);
+      transition: all 0.3s;
+    }
+    .phase-done { background: var(--green); box-shadow: 0 0 4px #10b98155; }
+    .phase-active { background: var(--accent); box-shadow: 0 0 6px #f59e0b88; animation: pulse 2s infinite; }
+    .phase-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: var(--text3);
+      letter-spacing: 0.5px;
+    }
+
+    .actions { display: flex; gap: 8px; margin-top: 16px; }
+    .btn-small {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--text2);
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      transition: all 0.15s;
+    }
+    .btn-small:hover { border-color: var(--accent); color: var(--accent); background: #f59e0b0a; }
+    .btn-small.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-small.primary:hover { background: var(--accent2); }
+
+    /* ── VIEWS ── */
     .view { display: none; }
     .view.active { display: block; }
-    
-    .phase-card { background: white; border: 1px solid #e5e5e7; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
-    .phase-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .phase-name { font-size: 14px; font-weight: 600; }
-    .phase-timer { font-size: 11px; color: #86868b; }
-    .phase-desc { font-size: 13px; color: #86868b; margin-bottom: 12px; }
-    
-    .gates-section { margin-bottom: 16px; }
-    .gates-title { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
-    .gate { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 12px; }
-    .gate-check { width: 18px; height: 18px; border-radius: 50%; background: #e5e5e7; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .gate-check.done { background: #34c759; color: white; font-size: 10px; font-weight: 600; }
-    
-    .files-section { background: #f5f5f7; border-radius: 8px; padding: 12px; margin-bottom: 16px; }
-    .files-title { font-size: 11px; font-weight: 600; color: #86868b; text-transform: uppercase; margin-bottom: 8px; }
-    .file-input { font-size: 12px; color: #007aff; cursor: pointer; }
-    
-    .modal-backdrop { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 9998; }
-    .modal-backdrop.show { display: flex; align-items: center; justify-content: center; }
-    
-    .modal { background: white; border-radius: 16px; padding: 24px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 9999; }
-    .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+
+    /* ── PHASE CARDS ── */
+    .phase-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 8px;
+      animation: fadeUp 0.25s ease both;
+    }
+    .phase-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .phase-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 3px;
+    }
+    .phase-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .phase-desc { font-size: 12px; color: var(--text3); margin-top: 2px; }
+    .phase-timer {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text3);
+      background: var(--bg3);
+      padding: 4px 10px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .gates-section { margin-bottom: 14px; }
+    .gates-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .gate {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 12px;
+      color: var(--text2);
+      border-bottom: 1px solid var(--border);
+    }
+    .gate:last-child { border-bottom: none; }
+    .gate-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s;
+      font-size: 10px;
+    }
+    .gate-check:hover { border-color: var(--green); }
+    .gate-check.done { background: var(--green); border-color: var(--green); color: #000; font-weight: 700; box-shadow: 0 0 8px #10b98155; }
+
+    .files-section {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+    .files-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .file-input { font-size: 12px; color: var(--accent); cursor: pointer; font-weight: 500; }
+    .file-input:hover { text-decoration: underline; }
+    .phase-run-btn {
+      padding: 3px 10px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      flex-shrink: 0;
+    }
+    .phase-run-btn:hover { opacity: 0.85; }
+    .phase-run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .phase-skill-result {
+      white-space: pre-wrap;
+      font-size: 11px;
+      color: var(--text2);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: 6px;
+      width: 100%;
+      margin-top: 6px;
+      line-height: 1.6;
+    }
+    .phase-save-badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--green);
+      background: rgba(52,199,89,0.08);
+      border: 1px solid rgba(52,199,89,0.25);
+      border-radius: 4px;
+      padding: 4px 10px;
+      margin-top: 6px;
+      display: inline-block;
+    }
+
+    /* ── SKILLS ── */
+    .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+    .filter-btn {
+      padding: 6px 14px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--text2);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+    .skill-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      animation: fadeUp 0.25s ease both;
+      transition: all 0.2s;
+    }
+    .skill-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+    .skill-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .skill-name { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; }
+    .skill-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-left: 8px; }
+    .dot-green { background: var(--green); box-shadow: 0 0 8px #10b98199; }
+    .dot-orange { background: var(--orange); box-shadow: 0 0 8px #f9731688; }
+    .dot-red { background: var(--red); box-shadow: 0 0 8px #ef444488; }
+    .skill-stats {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text3);
+    }
+    .skill-rate { font-size: 26px; font-weight: 800; color: var(--text); margin: 4px 0; letter-spacing: -1px; }
+    .skill-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text3);
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── MODAL ── */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(12px);
+      z-index: 9998;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.show { display: flex; }
+    .modal {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      padding: 28px;
+      width: 96%;
+      max-width: 960px;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+      z-index: 9999;
+      animation: fadeUp 0.2s ease;
+    }
+    .modal-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .modal-col-divider { width: 1px; background: var(--border); margin: 0 -12px; }
+    .test-result-box {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--text2);
+      min-height: 180px;
+      max-height: 280px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    .test-result-box.running { color: var(--accent); animation: pulse 1.2s infinite; }
+    .test-result-box.done { color: var(--text); border-color: var(--accent)44; }
+    .test-result-box.error { color: var(--red); border-color: var(--red)44; }
+    .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 22px; color: var(--text); letter-spacing: -0.3px; }
     .form-group { margin-bottom: 14px; }
-    .form-label { display: block; font-size: 11px; font-weight: 600; color: #86868b; margin-bottom: 6px; text-transform: uppercase; }
-    .form-input, .form-select { width: 100%; padding: 10px; border: 1px solid #e5e5e7; border-radius: 8px; font-size: 14px; font-family: inherit; }
-    .form-input:focus, .form-select:focus { outline: none; border-color: #007aff; box-shadow: 0 0 0 3px #007aff18; }
-    
-    .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
-    .modal-buttons button { flex: 1; padding: 10px; border: 1px solid #e5e5e7; background: white; border-radius: 8px; cursor: pointer; font-weight: 500; transition: 0.2s; }
-    .modal-buttons button:hover { border-color: #007aff; color: #007aff; }
-    .modal-buttons button.primary { background: #007aff; color: white; border-color: #007aff; }
-    .modal-buttons button.primary:hover { background: #0051d5; }
+    .form-label {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text3);
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .form-input, .form-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px #f59e0b1a;
+    }
+    .form-input[readonly] { color: var(--text3); cursor: default; }
+    .form-select option { background: var(--bg2); }
+    .modal-buttons { display: flex; gap: 10px; margin-top: 22px; }
+    .modal-buttons button {
+      flex: 1;
+      padding: 14px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--text2);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      transition: all 0.15s;
+    }
+    .modal-buttons button:hover { border-color: var(--accent); color: var(--accent); }
+    .modal-buttons button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .modal-buttons button.primary:hover { background: var(--accent2); }
+
+    /* Progress bar */
+    .progress-track {
+      flex: 1;
+      height: 5px;
+      background: var(--bg3);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width 0.4s ease; }
+    .progress-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text3);
+    }
+
+    /* detail info box */
+    .detail-box {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--text2);
+    }
+
+    /* loading state */
+    .loading {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+      letter-spacing: 1px;
+    }
+    .loading::after {
+      content: '...';
+      animation: pulse 1.5s infinite;
+    }
   </style>
 </head>
 <body>
   <div class="flex-container">
+    <!-- SIDEBAR -->
     <div class="sidebar">
-      <div class="logo">3P ProjectFlow</div>
-      
-      <div class="nav-section">
-        <div class="nav-title">Views</div>
-        <div class="nav-link active" onclick="switchView('projects')">📊 Dashboard</div>
-        <div class="nav-link" onclick="switchView('phases')">📋 Phases</div>
-        <div class="nav-link" onclick="switchView('skills')">⚙️ Skills</div>
+      <div class="logo">
+        <div class="logo-mark">3P Tech</div>
+        <div class="logo-name">Project<span>Flow</span></div>
       </div>
-      
-      <div class="nav-section">
-        <div class="nav-title">Projects</div>
-        <div id="projectsList" style="max-height: 400px; overflow-y: auto;"></div>
+      <div class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-title">Navigation</div>
+          <div class="nav-link active" onclick="switchView('projects')">
+            <span class="nav-icon">◈</span> Dashboard
+          </div>
+          <div class="nav-link" onclick="switchView('phases')">
+            <span class="nav-icon">◧</span> Phases
+          </div>
+          <div class="nav-link" onclick="switchView('skills')">
+            <span class="nav-icon">⬡</span> Skills
+          </div>
+          <div class="nav-link" onclick="switchView('run')">
+            <span class="nav-icon">▶</span> Run Skill
+          </div>
+          <div class="nav-link" onclick="switchView('standards')">
+            <span class="nav-icon">≡</span> Standards
+          </div>
+          <div class="nav-link" onclick="switchView('settings')">
+            <span class="nav-icon">◎</span> Settings
+          </div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-title">Projects</div>
+          <div id="projectsList"></div>
+        </div>
+      </div>
+      <div class="sidebar-footer">
+        <span class="dot"></span>GITHUB SYNC ACTIVE
       </div>
     </div>
 
+    <!-- MAIN -->
     <div class="main">
-      <!-- DASHBOARD VIEW -->
+
+      <!-- DASHBOARD -->
       <div class="view active" id="projectsView">
-        <div class="header">
-          <h1>Projects</h1>
-          <button class="btn-main" onclick="openModal('createProject')">+ New Project</button>
-        </div>
+        <div class="main-inner">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Projects</div>
+              <div class="page-subtitle">INSPECTION TRACKING SYSTEM / 2026</div>
+            </div>
+            <button class="btn-main" onclick="openModal('createProject')">+ New Project</button>
+          </div>
 
-        <div class="stats">
-          <div class="stat"><div class="stat-label">Total Projects</div><div class="stat-value">3</div></div>
-          <div class="stat"><div class="stat-label">In Progress</div><div class="stat-value">2</div></div>
-          <div class="stat"><div class="stat-label">Completed</div><div class="stat-value">0</div></div>
-          <div class="stat"><div class="stat-label">On Hold</div><div class="stat-value">1</div></div>
-        </div>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-label">Total</div>
+              <div class="stat-value" id="statTotal">3</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">In Progress</div>
+              <div class="stat-value" id="statActive">2</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Completed</div>
+              <div class="stat-value" id="statDone">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">On Hold</div>
+              <div class="stat-value" id="statHold">1</div>
+            </div>
+          </div>
 
-        <div class="section-title">Active Projects</div>
-        <div class="projects-grid" id="projectsGrid"></div>
+          <div class="section-title">Active Projects</div>
+          <div class="projects-grid" id="projectsGrid"></div>
+        </div>
       </div>
 
-      <!-- PHASES VIEW -->
+      <!-- PHASES -->
       <div class="view" id="phasesView">
-        <div class="header">
-          <h1 id="phaseTitle">Phases</h1>
+        <div class="main-inner">
+          <div class="page-header">
+            <div>
+              <div class="page-title" id="phaseTitle">Phases</div>
+              <div class="page-subtitle" id="phaseSubtitle">SELECT A PROJECT</div>
+            </div>
+          </div>
+          <div id="phasesContent"></div>
         </div>
-        <div id="phasesContent"></div>
       </div>
 
-      <!-- SKILLS VIEW -->
+      <!-- SKILLS -->
       <div class="view" id="skillsView">
-        <div class="header">
-          <h1>Skills Health</h1>
+        <div class="main-inner">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Skills</div>
+              <div class="page-subtitle">PULLED FROM GITHUB / RAW API</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+            <button class="btn-main" onclick="openModal('createSkill')">+ New Skill</button>
+          </div>
+          <div class="filter-bar">
+            <button class="filter-btn active" onclick="filterSkills('all', this)">All</button>
+            <button class="filter-btn" onclick="filterSkills('ATEX', this)">ATEX</button>
+            <button class="filter-btn" onclick="filterSkills('EPLAN', this)">EPLAN</button>
+            <button class="filter-btn" onclick="filterSkills('PLC-SCADA', this)">PLC / SCADA</button>
+            <button class="filter-btn" onclick="filterSkills('NH3', this)">NH3</button>
+            <button class="filter-btn" onclick="filterSkills('General', this)">General</button>
+          </div>
+          <div class="section-title" id="skillsFilterTitle">All Skills</div>
+          <div class="skills-grid" id="skillsHealthGrid"></div>
         </div>
-        
-        <div class="nav-section" style="margin-bottom: 20px;">
-          <div class="nav-title">Filter by Domain</div>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <button class="btn-small" onclick="filterSkillsView('all')" style="background: #007aff; color: white;">✓ All (16)</button>
-            <button class="btn-small" onclick="filterSkillsView('ATEX')">🔶 ATEX (3)</button>
-            <button class="btn-small" onclick="filterSkillsView('EPLAN')">📐 EPLAN (3)</button>
-            <button class="btn-small" onclick="filterSkillsView('PLC')">🔧 PLC/SCADA (4)</button>
-            <button class="btn-small" onclick="filterSkillsView('NH3')">⚗️ NH3 (2)</button>
-            <button class="btn-small" onclick="filterSkillsView('General')">✓ General (3)</button>
+      </div>
+
+      <!-- RUN SKILL VIEW -->
+      <div class="view" id="runView">
+        <div class="main-inner">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Run Skill</div>
+              <div class="page-subtitle">TEST A SKILL AGAINST A DOCUMENT</div>
+            </div>
+          </div>
+          <div id="runKeyBanner" class="api-key-banner">⚠ No API key set — go to Settings first</div>
+          <div class="run-panel">
+            <div class="run-col">
+              <div class="form-group">
+                <label class="form-label">Select Skill</label>
+                <select class="form-select" id="runSkillSelect"><option>Loading skills...</option></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Document / Text to Analyse</label>
+                <textarea class="form-input" id="runDocument" rows="8" placeholder="Paste the document text, inspection report, spec, or any content you want the skill to analyse..."></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Or Upload a File (PDF / Word / Image / TXT)</label>
+                <label style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg3);border:1px dashed var(--border2);border-radius:8px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)'">
+                  <span style="font-size:22px;">📄</span>
+                  <span id="runFileLabel" style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text3);">Click to choose file…</span>
+                  <input type="file" id="runFileInput" accept=".txt,.md,.csv,.pdf,.doc,.docx,.png,.jpg,.jpeg" style="display:none;" onchange="loadRunFile(this)">
+                </label>
+                <div id="runFileStatus" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);margin-top:6px;min-height:14px;"></div>
+                <div id="runImagePreview"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Reference Standards <span style="color:var(--text3);font-weight:400;font-size:10px;">— select one or more</span></label>
+                <div id="runStandardsList" style="display:flex;flex-direction:column;gap:5px;max-height:200px;overflow-y:auto;padding-right:4px;">
+                  <div style="font-size:11px;color:var(--text3);">Loading...</div>
+                </div>
+              </div>
+              <button class="btn-main" onclick="runSkill()" style="width:100%;padding:16px;font-size:16px;">▶ Run Skill</button>
+            </div>
+            <div class="run-col">
+              <div class="form-label" style="margin-bottom:8px;">Result</div>
+              <div class="run-output" id="runOutput">Result will appear here after you run a skill.</div>
+              <div id="runStatus" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);margin-top:6px;"></div>
+            </div>
           </div>
         </div>
-        
-        <div class="section-title" id="skillsFilterTitle">All Skills (16)</div>
-        <div class="skills-grid" id="skillsHealthGrid"></div>
       </div>
+
+      <!-- STANDARDS VIEW -->
+      <div class="view" id="standardsView">
+        <div class="main-inner">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Standards</div>
+              <div class="page-subtitle">REFERENCE DOCUMENTS · STORED IN GITHUB</div>
+            </div>
+          </div>
+
+          <!-- UPLOAD SECTION -->
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px;">
+            <div class="section-title" style="margin-bottom:16px;">Upload New Standard</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+              <div>
+                <label class="form-label">Domain / Folder</label>
+                <select class="form-select" id="stdUploadDomain">
+                  <option value="NH3">NH3</option>
+                  <option value="ATEX">ATEX</option>
+                  <option value="EPLAN">EPLAN</option>
+                  <option value="Trace-Heating">Trace-Heating</option>
+                  <option value="General">General</option>
+                  <option value="__custom__">+ New folder...</option>
+                </select>
+                <input type="text" class="form-input" id="stdUploadDomainCustom" placeholder="e.g. PLC-SCADA" style="display:none;margin-top:8px;" />
+              </div>
+              <div>
+                <label class="form-label">File name in GitHub <span style="color:var(--text3);font-weight:400;">(auto from filename)</span></label>
+                <input type="text" class="form-input" id="stdUploadName" placeholder="e.g. nh3-alarm-thresholds" />
+              </div>
+            </div>
+            <label style="display:block;border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:border-color 0.2s;margin-bottom:12px;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+              <div style="font-size:24px;margin-bottom:6px;">📄</div>
+              <div style="color:var(--text2);font-size:13px;" id="stdFileLabel">Click to choose file — PDF, Word, TXT, MD</div>
+              <input type="file" id="stdFileInput" accept=".pdf,.doc,.docx,.txt,.md" style="display:none;" onchange="onStdFileSelect(this)">
+            </label>
+            <button onclick="uploadStandard()" style="width:100%;padding:13px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s;" onmouseover="this.style.background='var(--accent2)'" onmouseout="this.style.background='var(--accent)'">
+              ↑ Convert &amp; Save to GitHub
+            </button>
+            <div id="stdUploadStatus" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);margin-top:8px;min-height:16px;"></div>
+          </div>
+
+          <!-- EXISTING STANDARDS LIST -->
+          <div class="section-title" style="margin-bottom:12px;">Standards in Repository</div>
+          <div id="standardsList" style="display:grid;gap:8px;">
+            <div class="loading">Loading from GitHub...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS VIEW -->
+      <div class="view" id="settingsView">
+        <div class="main-inner">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Settings</div>
+              <div class="page-subtitle">STORED LOCALLY IN YOUR BROWSER ONLY</div>
+            </div>
+          </div>
+          <div style="max-width:520px;">
+            <div class="phase-card">
+              <div class="phase-num">ANTHROPIC API KEY</div>
+              <div class="phase-name" style="margin-bottom:8px;">Claude API Access</div>
+              <div class="phase-desc" style="margin-bottom:16px;">Required to run skills against documents. Stored only in this browser — never sent to GitHub or any server.</div>
+              <div class="form-group">
+                <label class="form-label">API Key</label>
+                <input type="password" class="form-input" id="apiKeyInput" placeholder="sk-ant-api03-...">
+              </div>
+              <div style="display:flex;gap:10px;margin-top:12px;">
+                <button class="btn-main" onclick="saveApiKey()">Save Key</button>
+                <button class="btn-small" onclick="clearApiKey()">Clear</button>
+              </div>
+              <div id="apiKeyStatus" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);margin-top:10px;min-height:16px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- MODALS -->
+  <!-- MODAL: Create Project -->
   <div class="modal-backdrop" id="createProjectModal" onclick="if(event.target===this)closeModal()">
     <div class="modal">
       <div class="modal-title">Create New Project</div>
@@ -178,10 +906,10 @@
       <div class="form-group">
         <label class="form-label">Type</label>
         <select class="form-select" id="projType">
-          <option value="Pharma">Pharma</option>
-          <option value="Food">Food</option>
-          <option value="Chemical">Chemical</option>
-          <option value="Other">Other</option>
+          <option>Pharma</option>
+          <option>Food</option>
+          <option>Chemical</option>
+          <option>Other</option>
         </select>
       </div>
       <div class="form-group">
@@ -191,145 +919,425 @@
           <option value="true">Yes</option>
         </select>
       </div>
+      <div class="form-group">
+        <label class="form-label">Attach Project Document (optional — PDF / Word / Image / TXT)</label>
+        <label style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg3);border:1px dashed var(--border2);border-radius:8px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)'">
+          <span style="font-size:22px;">📄</span>
+          <span id="projFileLabel" style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text3);">Click to attach document…</span>
+          <input type="file" id="projFileInput" accept=".txt,.md,.csv,.pdf,.doc,.docx,.png,.jpg,.jpeg" style="display:none;" onchange="loadProjFile(this)">
+        </label>
+        <div id="projFileStatus" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent);margin-top:6px;min-height:14px;"></div>
+        <div id="projFilePreview" style="display:none;margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);background:var(--bg3);border-radius:6px;padding:8px 10px;max-height:80px;overflow:hidden;">No file loaded</div>
+      </div>
       <div class="modal-buttons">
         <button onclick="closeModal()">Cancel</button>
-        <button class="primary" onclick="saveProject()">Create</button>
+        <button class="primary" onclick="saveProject()">Create Project</button>
       </div>
     </div>
   </div>
 
+  <!-- MODAL: Skill Runner -->
+  <div class="modal-backdrop" id="skillRunnerModal" onclick="if(event.target===this)closeSkillRunner()">
+    <div class="modal" style="max-width:860px;width:95vw;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div>
+          <div class="modal-title" style="margin-bottom:2px;" id="srSkillName">Run Skill</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);" id="srSkillDomain"></div>
+        </div>
+        <button onclick="closeSkillRunner()" style="background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;padding:4px 8px;">✕</button>
+      </div>
+
+      <div class="modal-cols">
+        <!-- LEFT: standards + upload -->
+        <div>
+          <label class="form-label" style="margin-bottom:8px;">Reference Standards <span style="color:var(--text3);font-weight:400;font-size:10px;">— select one or more</span></label>
+          <div id="srStandardsList" style="display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto;padding-right:4px;margin-bottom:12px;">
+            <div class="loading" style="font-size:12px;">Loading standards...</div>
+          </div>
+          <label class="form-label">Upload Document or Image</label>
+          <label style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--bg3);border:2px dashed var(--border);border-radius:8px;cursor:pointer;transition:border-color 0.2s;margin-bottom:12px;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="font-size:20px;">📄</span>
+            <span id="srFileLabel" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);">Click to choose file — PDF, Word, Image, TXT</span>
+            <input type="file" id="srFileInput" accept=".pdf,.doc,.docx,.txt,.md,.png,.jpg,.jpeg" style="display:none;" onchange="loadSrFile(this)">
+          </label>
+          <textarea class="form-input" id="srDocText" rows="3" placeholder="Or paste document text here..." style="font-size:12px;margin-bottom:12px;"></textarea>
+          <button onclick="runSkillFromCard()" style="width:100%;padding:14px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background 0.2s;" onmouseover="this.style.background='var(--accent2)'" onmouseout="this.style.background='var(--accent)'">▶ Run Skill</button>
+          <div id="srStatus" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent);margin-top:6px;min-height:14px;"></div>
+        </div>
+
+        <!-- RIGHT: result -->
+        <div style="display:flex;flex-direction:column;">
+          <label class="form-label" style="margin-bottom:8px;">Result</label>
+          <div id="srResult" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text3);line-height:1.7;min-height:300px;white-space:pre-wrap;overflow-y:auto;">
+            Result will appear here after you run the skill.
+          </div>
+          <div id="srTokens" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);margin-top:6px;min-height:14px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Project Detail -->
   <div class="modal-backdrop" id="projectDetailModal" onclick="if(event.target===this)closeModal()">
     <div class="modal">
       <div class="modal-title" id="detailTitle">Project Details</div>
       <div id="detailContent"></div>
       <div class="modal-buttons">
-        <button class="primary" onclick="closeModal()" style="width: 100%;">Close</button>
+        <button class="primary" onclick="closeModal()" style="max-width:100%;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Create Skill -->
+  <div class="modal-backdrop" id="createSkillModal" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div class="modal-title" style="margin-bottom:0;">New Skill</div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1px;">SAVED TO GITHUB · VERSIONED</span>
+      </div>
+
+      <div class="modal-cols">
+        <!-- LEFT -->
+        <div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div>
+              <label class="form-label">Skill Name</label>
+              <input type="text" class="form-input" id="skillName" placeholder="e.g. ATEX Zone Check">
+            </div>
+            <div>
+              <label class="form-label">Domain</label>
+              <select class="form-select" id="skillDomain" onchange="toggleCustomDomain(this)">
+                <option>ATEX</option>
+                <option>EPLAN</option>
+                <option>PLC-SCADA</option>
+                <option>NH3</option>
+                <option>General</option>
+                <option value="__custom__">+ New Domain...</option>
+              </select>
+              <input type="text" class="form-input" id="skillDomainCustom" placeholder="e.g. Hydraulics" style="display:none;margin-top:6px;">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="display:flex;align-items:center;justify-content:space-between;">
+              <span>Describe or paste prompt directly</span>
+              <label style="cursor:pointer;font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text3)'">
+                📝 upload .md
+                <input type="file" id="skillMdInput" accept=".md,.txt" style="display:none;" onchange="loadSkillMd(this)">
+              </label>
+            </label>
+            <textarea class="form-input" id="skillDescription" rows="3" placeholder="Describe what you want — Claude writes the prompt. Or skip this and write the prompt directly below."></textarea>
+            <button onclick="generateSkillPrompt()" id="generateSkillBtn" style="width:100%;margin-top:8px;padding:11px;background:rgba(91,141,181,0.12);border:1px solid rgba(91,141,181,0.35);border-radius:8px;color:var(--accent);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(91,141,181,0.22)'" onmouseout="this.style.background='rgba(91,141,181,0.12)'">
+              ✦ Build Skill from Description
+            </button>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Prompt</label>
+            <textarea class="form-input" id="skillPrompt" rows="8" placeholder="Prompt appears here after Build — or write it manually."></textarea>
+          </div>
+          <div id="skillFeedbackGroup" style="display:none;margin-bottom:12px;">
+            <input type="text" class="form-input" id="skillFeedback" placeholder="Not right? Tell Claude what to fix and hit Regenerate..." style="margin-bottom:6px;">
+            <button onclick="generateSkillPrompt(true)" style="width:100%;padding:9px;background:rgba(91,141,181,0.08);border:1px solid rgba(91,141,181,0.25);border-radius:8px;color:var(--text2);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;" onmouseover="this.style.background='rgba(91,141,181,0.18)'" onmouseout="this.style.background='rgba(91,141,181,0.08)'">
+              ↺ Regenerate with Feedback
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Test it live -->
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:1px;margin-bottom:14px;text-transform:uppercase;">② Test Against a Document</div>
+          <div class="form-group">
+            <label class="form-label">Paste Document / Excerpt</label>
+            <textarea class="form-input" id="skillTestDoc" rows="4" placeholder="Paste any text — inspection report excerpt, spec paragraph, email content...&#10;&#10;Claude will run your skill prompt against this."></textarea>
+          </div>
+          <div style="margin-bottom:12px;">
+            <label class="form-label">Or Upload a File (PDF / Word / Image / TXT)</label>
+            <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg3);border:1px dashed var(--border2);border-radius:8px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)'">
+              <span style="font-size:18px;">📄</span>
+              <span id="skillFileLabel" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);">Click to choose file…</span>
+              <input type="file" id="skillFileInput" accept=".txt,.md,.pdf,.doc,.docx,.png,.jpg,.jpeg" style="display:none;" onchange="loadSkillTestFile(this)">
+            </label>
+          </div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label class="form-label">Reference Standards <span style="color:var(--text3);font-weight:400;font-size:10px;">— select one or more</span></label>
+            <div id="createStandardsList" style="display:flex;flex-direction:column;gap:5px;max-height:180px;overflow-y:auto;padding-right:4px;">
+              <div style="font-size:11px;color:var(--text3);">Loading...</div>
+            </div>
+          </div>
+          <button onclick="testSkillInline()" style="width:100%;padding:13px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:12px;letter-spacing:0.3px;transition:background 0.2s;" onmouseover="this.style.background='var(--accent2)'" onmouseout="this.style.background='var(--accent)'">
+            ▶ Run Test
+          </button>
+          <label class="form-label">Result</label>
+          <div class="test-result-box" id="skillTestResult">Result will appear here after you run the test.</div>
+          <div id="skillTestTokens" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);margin-top:6px;min-height:14px;"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+        <div id="skillSaveStatus" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);min-height:16px;margin-bottom:12px;"></div>
+        <div class="modal-buttons">
+          <button onclick="closeModal()">Cancel</button>
+          <button class="primary" onclick="saveSkill()">Save to GitHub</button>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
+    // PDF.js worker
+    if (typeof pdfjsLib !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
+    // Stores image data for vision API calls { mimeType, base64 }
+    let _runImage = null;
+    let _skillTestImage = null;
+    let _projImage = null;
+
+    function isImage(name) { return /\.(png|jpe?g|gif|webp)$/i.test(name); }
+    function isDocx(name)  { return /\.docx?$/i.test(name); }
+    function isPdf(name)   { return /\.pdf$/i.test(name); }
+
+    // Read file as base64
+    function fileToBase64(file) {
+      return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = e => res(e.target.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+    }
+
+    // Extract text from PDF
+    async function extractPdfText(file, statusEl) {
+      if (statusEl) { statusEl.textContent = 'Extracting PDF text...'; statusEl.style.color = 'var(--accent)'; }
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let text = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        text += content.items.map(item => item.str).join(' ') + '\n';
+      }
+      if (statusEl) { statusEl.textContent = `✓ Extracted ${pdf.numPages} page${pdf.numPages > 1 ? 's' : ''} (${text.length.toLocaleString()} chars)`; statusEl.style.color = 'var(--green)'; }
+      return text.trim();
+    }
+
+    // Extract text from DOCX using mammoth
+    async function extractDocxText(file, statusEl) {
+      if (statusEl) { statusEl.textContent = 'Extracting Word doc text...'; statusEl.style.color = 'var(--accent)'; }
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      const text = result.value.trim();
+      if (statusEl) { statusEl.textContent = `✓ Word doc extracted (${text.length.toLocaleString()} chars)`; statusEl.style.color = 'var(--green)'; }
+      return text;
+    }
+
+    // Universal file loader — returns { text, image: {mimeType, base64} | null }
+    async function loadAnyFile(file, statusEl) {
+      const name = file.name;
+      if (isPdf(name))   return { text: await extractPdfText(file, statusEl),  image: null };
+      if (isDocx(name))  return { text: await extractDocxText(file, statusEl), image: null };
+      if (isImage(name)) {
+        const base64 = await fileToBase64(file);
+        const mimeType = file.type || 'image/jpeg';
+        if (statusEl) { statusEl.textContent = `✓ Image loaded — Claude will analyse it visually`; statusEl.style.color = 'var(--green)'; }
+        return { text: null, image: { mimeType, base64 } };
+      }
+      // Plain text fallback
+      return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = e => {
+          if (statusEl) { statusEl.textContent = `✓ ${name} loaded (${e.target.result.length.toLocaleString()} chars)`; statusEl.style.color = 'var(--green)'; }
+          res({ text: e.target.result, image: null });
+        };
+        r.onerror = rej;
+        r.readAsText(file);
+      });
+    }
+
+    // Build Claude message content (handles text + image)
+    function buildMessageContent(prompt, text, image) {
+      if (image) {
+        return [
+          { type: 'text', text: prompt + '\n\n---\n\nAnalyse the attached document:' },
+          { type: 'image', source: { type: 'base64', media_type: image.mimeType, data: image.base64 } }
+        ];
+      }
+      return `${prompt}\n\n---\n\nDOCUMENT TO ANALYSE:\n\n${text || ''}`;
+    }
+
+    // Show image thumbnail preview
+    function showImageThumb(base64, mimeType, containerEl) {
+      containerEl.innerHTML = `<img src="data:${mimeType};base64,${base64}" style="max-height:80px;max-width:100%;border-radius:6px;border:1px solid var(--border2);margin-top:8px;">`;
+    }
+
     const PHASES = [
-      { id:1, name:"Modtagelse", desc:"Registrering & dokumentmodtagelse", timer:120, skills:["FIRE_EXIT_ANALYSIS"], gates:["Dokumenter modtaget","Projekt registreret","Mangler-liste sendt"], files:[] },
-      { id:2, name:"Analyse", desc:"ATEX-klassificering & projektscoping", timer:240, skills:["ATEX_RISK_ASSESSMENT","EQUIPMENT_FAILURE_ANALYSIS"], gates:["ATEX klassificering komplet","Zoner identificeret"], files:[] },
-      { id:3, name:"Data Udtræk", desc:"I/O-lister, motortabeller, klemmeplaner", timer:360, skills:["DIAGRAM_CHECK","STANDARD_COMPLIANCE"], gates:["I/O-liste komplet","Motor-tabel færdig"], files:[] },
-      { id:4, name:"Tavle Design", desc:"Tegninger fra templates med symbolik", timer:480, skills:["SCHEMATIC_REVIEW","LOGIC_FAILURE_ANALYSIS"], gates:["Tegninger genereret","Symbolik valideret"], files:[] },
-      { id:5, name:"QC Review", desc:"Fejlsøgning & validering", timer:240, skills:["SAFETY_INTERLOCK_CHECK","SYSTEM_FAILURE_SCENARIO"], gates:["QC-score ≥95%","Tegninger godkendt"], files:[] },
-      { id:6, name:"Leverandør", desc:"Overlevering & produktionsopfølgning", timer:2880, skills:["NETWORK_COMMUNICATION_CHECK","NH3_FAILURE_SCENARIO"], gates:["Leverandør bekræftet","Produktionsplan modtaget"], files:[] },
-      { id:7, name:"FAT", desc:"Factory Acceptance Test", timer:960, skills:["NH3_SAFETY_ANALYSIS","FAILURE_MODE_ANALYSIS"], gates:["FAT-protokol underskrevet"], files:[] },
-      { id:8, name:"Transport", desc:"Levering & montage", timer:960, skills:["RISK_ASSESSMENT","COMPLIANCE_CHECK"], gates:["Modtaget uden skader","Monteret"], files:[] },
-      { id:9, name:"SAT & Aflevering", desc:"Site Acceptance Test", timer:1440, skills:["FIRE_EXIT_ANALYSIS","ATEX_RISK_ASSESSMENT"], gates:["SAT-protokol underskrevet"], files:[] }
+      { id:1, name:"Modtagelse",    desc:"Registrering & dokumentmodtagelse",          timer:120,  skills:["FIRE_EXIT_ANALYSIS"],                           gates:["Dokumenter modtaget","Projekt registreret","Mangler-liste sendt"] },
+      { id:2, name:"Analyse",       desc:"ATEX-klassificering & projektscoping",        timer:240,  skills:["ATEX_RISK_ASSESSMENT","EQUIPMENT_FAILURE_ANALYSIS"], gates:["ATEX klassificering komplet","Zoner identificeret"] },
+      { id:3, name:"Data Udtræk",   desc:"I/O-lister, motortabeller, klemmeplaner",    timer:360,  skills:["DIAGRAM_CHECK","STANDARD_COMPLIANCE"],           gates:["I/O-liste komplet","Motor-tabel færdig"] },
+      { id:4, name:"Tavle Design",  desc:"Tegninger fra templates med symbolik",        timer:480,  skills:["SCHEMATIC_REVIEW","LOGIC_FAILURE_ANALYSIS"],     gates:["Tegninger genereret","Symbolik valideret"] },
+      { id:5, name:"QC Review",     desc:"Fejlsøgning & validering",                   timer:240,  skills:["SAFETY_INTERLOCK_CHECK","SYSTEM_FAILURE_SCENARIO"], gates:["QC-score ≥95%","Tegninger godkendt"] },
+      { id:6, name:"Leverandør",    desc:"Overlevering & produktionsopfølgning",        timer:2880, skills:["NETWORK_COMMUNICATION_CHECK","NH3_FAILURE_SCENARIO"], gates:["Leverandør bekræftet","Produktionsplan modtaget"] },
+      { id:7, name:"FAT",           desc:"Factory Acceptance Test",                     timer:960,  skills:["NH3_SAFETY_ANALYSIS","FAILURE_MODE_ANALYSIS"],   gates:["FAT-protokol underskrevet"] },
+      { id:8, name:"Transport",     desc:"Levering & montage",                          timer:960,  skills:["RISK_ASSESSMENT","COMPLIANCE_CHECK"],            gates:["Modtaget uden skader","Monteret"] },
+      { id:9, name:"SAT & Aflevering", desc:"Site Acceptance Test",                   timer:1440, skills:["FIRE_EXIT_ANALYSIS","ATEX_RISK_ASSESSMENT"],      gates:["SAT-protokol underskrevet"] }
     ];
 
+    const SKILL_LABELS = {
+      FIRE_EXIT_ANALYSIS: 'Fire Exit Analysis',
+      EQUIPMENT_FAILURE_ANALYSIS: 'Equipment Failure Analysis',
+      ATEX_RISK_ASSESSMENT: 'ATEX Risk Assessment',
+      DIAGRAM_CHECK: 'Diagram Check',
+      STANDARD_COMPLIANCE: 'Standard Compliance',
+      SCHEMATIC_REVIEW: 'Schematic Review',
+      LOGIC_FAILURE_ANALYSIS: 'Logic Failure Analysis',
+      SAFETY_INTERLOCK_CHECK: 'Safety Interlock Check',
+      SYSTEM_FAILURE_SCENARIO: 'System Failure Scenario',
+      NETWORK_COMMUNICATION_CHECK: 'Network Communication Check',
+      NH3_FAILURE_SCENARIO: 'NH3 Failure Scenario',
+      NH3_SAFETY_ANALYSIS: 'NH3 Safety Analysis',
+      FAILURE_MODE_ANALYSIS: 'Failure Mode Analysis',
+      RISK_ASSESSMENT: 'Risk Assessment',
+      COMPLIANCE_CHECK: 'Compliance Check'
+    };
+
     let projects = [
-      { id:"NNDK042", name:"Novo 085 Kompressor", kunde:"Novo Nordisk", type:"Pharma", atex:true, phase:3, gates:{1:[1,1,1],2:[1,1,0],3:[0,0,0]}, files:{}, created:"2026-01-15" },
-      { id:"UBDK2407", name:"Unibio NH3 Tavle", kunde:"Unibio", type:"Chemical", atex:true, phase:5, gates:{1:[1,1,1],2:[1,1,1],3:[1,1,1],4:[1,1,1],5:[0,0]}, files:{}, created:"2025-11-20" },
-      { id:"ARLA001", name:"Arla Mejeri MCC", kunde:"Arla Foods", type:"Food", atex:false, phase:1, gates:{1:[0,0,0]}, files:{}, created:"2026-03-01" }
+      { id:"NNDK042",  name:"Novo 085 Kompressor",  kunde:"Novo Nordisk", type:"Pharma",   atex:true,  phase:3, gates:{1:[1,1,1],2:[1,1,0],3:[0,0,0]}, files:{}, created:"2026-01-15" },
+      { id:"UBDK2407", name:"Unibio NH3 Tavle",     kunde:"Unibio",       type:"Chemical", atex:true,  phase:5, gates:{1:[1,1,1],2:[1,1,1],3:[1,1,1],4:[1,1,1],5:[0,0]}, files:{}, created:"2025-11-20" },
+      { id:"ARLA001",  name:"Arla Mejeri MCC",       kunde:"Arla Foods",   type:"Food",     atex:false, phase:1, gates:{1:[0,0,0]}, files:{}, created:"2026-03-01" }
     ];
 
     let currentProject = null;
+    let skillsCache = null;
 
     function switchView(view) {
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+
+      const navMap = { projects: 0, phases: 1, skills: 2, run: 3, standards: 4, settings: 5 };
+      if (navMap[view] !== undefined) document.querySelectorAll('.nav-link')[navMap[view]]?.classList.add('active');
+
       if (view === 'projects') {
         document.getElementById('projectsView').classList.add('active');
         renderProjects();
       } else if (view === 'phases') {
         document.getElementById('phasesView').classList.add('active');
         if (currentProject) renderPhases();
-        else alert('Select a project first');
-      } else {
+        else { document.getElementById('phaseTitle').textContent = 'Phases'; document.getElementById('phasesContent').innerHTML = '<div class="loading">Select a project from the sidebar</div>'; }
+      } else if (view === 'skills') {
         document.getElementById('skillsView').classList.add('active');
-        filterSkillsView('all');
+        filterSkills('all', document.querySelector('.filter-btn'));
+      } else if (view === 'run') {
+        document.getElementById('runView').classList.add('active');
+        updateKeyBanner();
+        if (skillsCache) populateRunSkillSelect();
+        else fetch('https://raw.githubusercontent.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation/main/_skills/skills-index.json')
+          .then(r => r.json()).then(d => { skillsCache = d.skills; populateRunSkillSelect(); });
+        loadMultiStandards('runStandardsList');
+      } else if (view === 'standards') {
+        document.getElementById('standardsView').classList.add('active');
+        loadStandardsDomains();
+        loadStandardsView();
+      } else if (view === 'settings') {
+        document.getElementById('settingsView').classList.add('active');
       }
     }
 
-    function filterSkillsView(domain) {
-      // Skills will be loaded from GitHub skills-index.json
-      const githubUrl = 'https://raw.githubusercontent.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation/main/_skills/skills-index.json';
-      
-      fetch(githubUrl)
-        .then(r => r.json())
-        .then(data => {
-          let skills = data.skills;
-          let title = 'All Skills (16)';
-          
-          if (domain !== 'all') {
-            skills = skills.filter(s => s.domain === domain);
-            title = `${domain} Skills (${skills.length})`;
-          }
+    function filterSkills(domain, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
 
-          document.getElementById('skillsFilterTitle').textContent = title;
-          
-          document.getElementById('skillsHealthGrid').innerHTML = skills.map(skill => {
-            const rate = skill.metrics.successRate || 0;
-            const health = rate >= 95 ? 'healthy' : rate >= 80 ? 'degraded' : 'failing';
-            const healthIcon = rate >= 95 ? '🟢' : rate >= 80 ? '🟡' : '🔴';
-            const trend = skill.metrics.trend || 'stable';
-            const trendIcon = trend === 'improving' ? '📈' : trend === 'declining' ? '📉' : '→';
-            
-            return `
-              <div class="skill-card">
-                <div class="skill-header">
-                  <div class="skill-name">${skill.name}</div>
-                  <div class="skill-dot ${health === 'healthy' ? 'dot-green' : health === 'degraded' ? 'dot-orange' : 'dot-red'}"></div>
-                </div>
-                <div class="skill-stats">${skill.metrics.executions} executions</div>
-                <div class="skill-rate">${rate}%</div>
-                <div style="font-size: 11px; color: #86868b; margin-top: 8px;">
-                  ${healthIcon} ${health.charAt(0).toUpperCase() + health.slice(1)}
-                  ${trendIcon} ${trend}
-                </div>
-                <div style="font-size: 10px; color: #c7c7cc; margin-top: 6px; padding-top: 8px; border-top: 1px solid #e5e5e7;">
-                  v${skill.version} • Last: ${new Date(skill.metrics.lastExecuted).toLocaleDateString()}
-                </div>
-              </div>
-            `;
-          }).join('');
-        })
-        .catch(err => {
-          console.error('Error loading skills from GitHub:', err);
-          document.getElementById('skillsHealthGrid').innerHTML = '<div style="padding: 20px; color: #86868b; grid-column: 1/-1; text-align: center;">Failed to load skills. Update GitHub URL in code and try again.</div>';
+      const grid = document.getElementById('skillsHealthGrid');
+
+      if (skillsCache) {
+        renderSkills(skillsCache, domain);
+        return;
+      }
+
+      grid.innerHTML = '<div class="loading">Fetching from GitHub</div>';
+      fetch('https://raw.githubusercontent.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation/main/_skills/skills-index.json')
+        .then(r => r.json())
+        .then(data => { skillsCache = data.skills; renderSkills(skillsCache, domain); })
+        .catch(() => {
+          grid.innerHTML = '<div class="loading">Failed to load — check GitHub URL</div>';
         });
     }
 
+    function renderSkills(skills, domain) {
+      const filtered = domain === 'all' ? skills : skills.filter(s => s.domain === domain);
+      document.getElementById('skillsFilterTitle').textContent = `${domain === 'all' ? 'All' : domain} Skills (${filtered.length})`;
+      populateRunSkillSelect();
+      document.getElementById('skillsHealthGrid').innerHTML = filtered.map(skill => {
+        const rate = skill.metrics?.successRate || 0;
+        const dotClass = rate >= 95 ? 'dot-green' : rate >= 80 ? 'dot-orange' : 'dot-red';
+        const health = rate >= 95 ? 'Healthy' : rate >= 80 ? 'Degraded' : 'Failing';
+        const trend = skill.metrics?.trend || 'stable';
+        const rawVer = skill.version || 'v1';
+        // Normalize: "1.0.0" → "v1", "v2" → "v2"
+        const ver = /^\d/.test(rawVer) ? 'v' + rawVer.split('.')[0] : rawVer;
+        const verNum = parseInt(ver.replace('v','')) || 1;
+        const history = skill.history || [];
+        const historyDots = history.slice(-5).map((h, i) =>
+          `<span title="${h.version} — ${h.date ? new Date(h.date).toLocaleDateString('da-DK') : ''}" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${i === history.length-1 ? 'var(--accent)' : 'var(--border2)'};margin-right:3px;"></span>`
+        ).join('');
+        return `
+          <div class="skill-card" onclick="openSkillRunner(${JSON.stringify(skill).replace(/"/g,'&quot;')})" style="cursor:pointer;">
+            <div class="skill-header">
+              <div class="skill-name">${skill.name}</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--accent);background:var(--accent)18;border:1px solid var(--accent)44;border-radius:4px;padding:2px 6px;">${ver}</span>
+                <div class="skill-dot ${dotClass}"></div>
+              </div>
+            </div>
+            <div class="skill-stats">${skill.metrics?.executions || 0} executions</div>
+            <div class="skill-meta">${skill.domain || 'General'} · ${health}</div>
+            <div style="margin-top:10px;padding:6px 10px;background:rgba(91,141,181,0.08);border:1px solid rgba(91,141,181,0.2);border-radius:6px;text-align:center;font-size:11px;color:var(--accent);font-family:'IBM Plex Mono',monospace;">▶ Run this skill</div>
+          </div>
+        `;
+      }).join('') || '<div class="loading">No skills in this domain</div>';
+    }
+
     function renderProjects() {
-      document.getElementById('projectsGrid').innerHTML = projects.map(p => {
+      document.getElementById('projectsGrid').innerHTML = projects.map((p, idx) => {
         const completed = Object.values(p.gates).flat().filter(g => g === 1).length;
         const total = Object.values(p.gates).flat().length;
-        const pct = total > 0 ? (completed / total) * 100 : 0;
         return `
-          <div class="project-card" onclick="selectProject('${p.id}')">
+          <div class="project-card" style="animation-delay:${idx * 0.05}s" onclick="selectProject('${p.id}')">
             <div class="proj-header">
               <div class="proj-info">
-                <div class="proj-id">${p.id}</div>
+                <div class="proj-id">${p.kunde} · ${p.type}</div>
                 <div class="proj-name">${p.name}</div>
-                <div class="proj-customer">${p.kunde}</div>
+                <div class="proj-customer" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.5px;">${p.id}${p.atex ? ' · ATEX' : ''}</div>
               </div>
-              <span class="proj-status">Phase ${p.phase}</span>
+              <span class="proj-status">PH ${p.phase}/9</span>
             </div>
             <div class="phases-track">
               <div class="phase-progress">
-                ${PHASES.slice(0,9).map((ph,i) => `<div class="phase-dot ${i+1 <= p.phase ? 'phase-done' : i+1 === p.phase ? 'phase-active' : ''}"></div>`).join('')}
+                ${PHASES.map((ph,i) => `<div class="phase-dot ${i+1 < p.phase ? 'phase-done' : i+1 === p.phase ? 'phase-active' : ''}"></div>`).join('')}
               </div>
-              <div style="font-size: 10px; color: #86868b;">Phase ${p.phase} of 9</div>
+              <div class="phase-label">${PHASES[p.phase-1].name} · ${completed}/${total} gates</div>
             </div>
             <div class="actions">
-              <button class="btn-small" onclick="viewProject(event,'${p.id}')">View</button>
-              <button class="btn-small primary" onclick="nextPhase(event,'${p.id}')">→ Next Phase</button>
+              <button class="btn-small" onclick="viewProject(event,'${p.id}')">Details</button>
+              <button class="btn-small primary" onclick="nextPhase(event,'${p.id}')">Next Phase →</button>
             </div>
           </div>
         `;
       }).join('');
 
-      document.getElementById('projectsList').innerHTML = projects.map(p => 
-        `<div class="nav-link ${currentProject === p.id ? 'active' : ''}" onclick="selectProject('${p.id}')">${p.id}</div>`
+      document.getElementById('projectsList').innerHTML = projects.map(p =>
+        `<div class="nav-link ${currentProject === p.id ? 'active' : ''}" onclick="selectProject('${p.id}')">
+          <span class="nav-icon" style="font-family:'IBM Plex Mono',monospace;font-size:9px;">${p.phase}/9</span>
+          ${p.id}
+        </div>`
       ).join('');
+
+      document.getElementById('statTotal').textContent = projects.length;
     }
 
     function selectProject(id) {
       currentProject = id;
-      renderProjects();
+      switchView('phases');
     }
 
     function viewProject(e, id) {
@@ -337,33 +1345,30 @@
       const p = projects.find(x => x.id === id);
       const completed = Object.values(p.gates).flat().filter(g => g === 1).length;
       const total = Object.values(p.gates).flat().length;
-      
+      const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+
       document.getElementById('detailTitle').textContent = p.name;
       document.getElementById('detailContent').innerHTML = `
         <div class="form-group">
           <label class="form-label">Project ID</label>
-          <input type="text" class="form-input" value="${p.id}" readonly>
+          <input class="form-input" value="${p.id}" readonly>
         </div>
         <div class="form-group">
           <label class="form-label">Customer</label>
-          <input type="text" class="form-input" value="${p.kunde}" readonly>
+          <input class="form-input" value="${p.kunde}" readonly>
         </div>
         <div class="form-group">
           <label class="form-label">Current Phase</label>
-          <input type="text" class="form-input" value="Phase ${p.phase}: ${PHASES[p.phase-1].name}" readonly>
+          <input class="form-input" value="Phase ${p.phase}: ${PHASES[p.phase-1].name}" readonly>
         </div>
         <div class="form-group">
-          <label class="form-label">Progress</label>
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <div style="flex: 1; height: 6px; background: #e5e5e7; border-radius: 3px; overflow: hidden;">
-              <div style="height: 100%; background: #34c759; width: ${(completed/total)*100}%;"></div>
-            </div>
-            <div style="font-size: 12px; color: #86868b;">${completed}/${total}</div>
+          <label class="form-label">Progress — ${pct}%</label>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+            <span class="progress-label">${completed}/${total}</span>
           </div>
         </div>
-        <div style="background: #f5f5f7; padding: 12px; border-radius: 8px; font-size: 12px;">
-          <strong>Gates Completed:</strong> ${completed > 0 ? 'Yes' : 'None yet'}
-        </div>
+        <div class="detail-box">ATEX: ${p.atex ? 'Required' : 'Not required'} · Type: ${p.type} · Created: ${p.created}</div>
       `;
       document.getElementById('projectDetailModal').classList.add('show');
     }
@@ -381,62 +1386,62 @@
     function renderPhases() {
       if (!currentProject) return;
       const p = projects.find(x => x.id === currentProject);
-      document.getElementById('phaseTitle').textContent = p.name + ' - Phases';
-      
+      document.getElementById('phaseTitle').textContent = p.name;
+      document.getElementById('phaseSubtitle').textContent = `${p.id} · ${p.kunde}`;
+
       document.getElementById('phasesContent').innerHTML = PHASES.map((ph, idx) => {
         const phGates = p.gates[ph.id] || [];
         const completed = phGates.filter(g => g === 1).length;
         const isActive = ph.id === p.phase;
-        
+
         return `
-          <div class="phase-card">
+          <div class="phase-card" style="animation-delay:${idx*0.04}s;${isActive ? 'border-color:#f59e0b44;' : ''}">
             <div class="phase-header">
               <div>
-                <div class="phase-name">Phase ${ph.id}: ${ph.name}</div>
+                <div class="phase-num">PHASE ${ph.id}${isActive ? ' · ACTIVE' : ph.id < p.phase ? ' · DONE' : ''}</div>
+                <div class="phase-name">${ph.name}</div>
                 <div class="phase-desc">${ph.desc}</div>
               </div>
-              <div class="phase-timer">⏱ ${ph.timer} min</div>
+              <div class="phase-timer">⏱ ${ph.timer >= 60 ? Math.round(ph.timer/60)+'h' : ph.timer+'m'}</div>
             </div>
-            
+
             <div class="gates-section">
-              <div class="gates-title">⚙️ Skills Used (${ph.skills.length})</div>
-              ${ph.skills.map(skill => {
-                const skillNames = {
-                  'FIRE_EXIT_ANALYSIS': '🔶 Fire Exit Analysis',
-                  'EQUIPMENT_FAILURE_ANALYSIS': '🔶 Equipment Failure Analysis',
-                  'ATEX_RISK_ASSESSMENT': '🔶 ATEX Risk Assessment',
-                  'DIAGRAM_CHECK': '📐 Diagram Check & Validation',
-                  'STANDARD_COMPLIANCE': '📐 Standard Compliance Check',
-                  'SCHEMATIC_REVIEW': '📐 Schematic Review & Analysis',
-                  'LOGIC_FAILURE_ANALYSIS': '🔧 PLC Logic Failure Analysis',
-                  'SAFETY_INTERLOCK_CHECK': '🔧 Safety Interlock Check',
-                  'SYSTEM_FAILURE_SCENARIO': '🔧 System Failure Scenario',
-                  'NETWORK_COMMUNICATION_CHECK': '🔧 Network Communication Check',
-                  'NH3_FAILURE_SCENARIO': '⚗️ NH3 Failure Scenario',
-                  'NH3_SAFETY_ANALYSIS': '⚗️ NH3 Safety Analysis',
-                  'FAILURE_MODE_ANALYSIS': '✓ Failure Mode Analysis',
-                  'RISK_ASSESSMENT': '✓ Risk Assessment',
-                  'COMPLIANCE_CHECK': '✓ Compliance Check'
-                };
-                return `<div style="padding: 6px 0; font-size: 12px; color: #1d1d1f; border-bottom: 1px solid #e5e5e7;">${skillNames[skill] || skill}</div>`;
+              <div class="gates-title">Skills (${ph.skills.length})</div>
+              ${ph.skills.map(sk => {
+                const stKey = `${currentProject}_${ph.id}`;
+                const savedResult = (window.phaseState?.[stKey]?.results?.[sk]) || '';
+                return `
+                <div class="gate" style="flex-direction:column;align-items:flex-start;gap:0;">
+                  <div style="display:flex;align-items:center;gap:8px;width:100%;padding:6px 0;">
+                    <div style="width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;box-shadow:0 0 4px var(--accent);"></div>
+                    <span style="flex:1;">${SKILL_LABELS[sk] || sk}</span>
+                    <button id="phaseBtn_${ph.id}_${sk}" class="phase-run-btn" onclick="runPhaseSkill(${ph.id},'${sk}')">▶ Run</button>
+                  </div>
+                  ${savedResult ? `<pre class="phase-skill-result">${savedResult}</pre><div class="phase-save-badge">✓ Saved to GitHub</div>` : `<pre id="phaseResult_${ph.id}_${sk}" class="phase-skill-result" style="display:none;"></pre><div id="phaseSave_${ph.id}_${sk}" class="phase-save-badge" style="display:none;"></div>`}
+                </div>`;
               }).join('')}
             </div>
-            
+
             <div class="gates-section">
-              <div class="gates-title">✓ Gates (${completed}/${ph.gates.length})</div>
+              <div class="gates-title">Gates (${completed}/${ph.gates.length})</div>
               ${ph.gates.map((gate, i) => `
                 <div class="gate">
-                  <div class="gate-check ${phGates[i] ? 'done' : ''}" onclick="toggleGate(${ph.id},${i})">
+                  <div id="gateCheck_${ph.id}_${i}" class="gate-check ${phGates[i] ? 'done' : ''}" onclick="toggleGate(${ph.id},${i})">
                     ${phGates[i] ? '✓' : ''}
                   </div>
-                  <span>${gate}</span>
+                  <span id="gateLabel_${ph.id}_${i}" style="${phGates[i] ? 'color:var(--text3);text-decoration:line-through;' : ''}">${gate}</span>
                 </div>
               `).join('')}
             </div>
-            
+
             <div class="files-section">
-              <div class="files-title">📁 Files (${Object.keys(p.files).length})</div>
-              <div class="file-input" onclick="alert('File upload functionality')">+ Add Files</div>
+              <div class="files-title">Document</div>
+              <label style="cursor:pointer;display:block;">
+                <div class="file-input">
+                  <span id="phaseFileLabel_${ph.id}">${(window.phaseState||{})[currentProject+'_'+ph.id]?.fileName || '+ Attach File (PDF / Word / Image / TXT)'}</span>
+                </div>
+                <input type="file" accept=".pdf,.docx,.doc,.png,.jpg,.jpeg,.txt,.md" style="display:none" onchange="handlePhaseFile(event,${ph.id})">
+              </label>
             </div>
           </div>
         `;
@@ -451,36 +1456,978 @@
       renderPhases();
     }
 
+    window.phaseState = window.phaseState || {};
+
+    async function handlePhaseFile(event, phId) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const stKey = `${currentProject}_${phId}`;
+      window.phaseState[stKey] = window.phaseState[stKey] || {};
+      const label = document.getElementById(`phaseFileLabel_${phId}`);
+      if (label) label.textContent = '⟳ Extracting...';
+
+      try {
+        if (file.type === 'application/pdf') {
+          const ab = await file.arrayBuffer();
+          const pdf = await pdfjsLib.getDocument({data: ab}).promise;
+          let text = '';
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const c = await page.getTextContent();
+            text += c.items.map(x => x.str).join(' ') + '\n';
+          }
+          window.phaseState[stKey].doc = text;
+        } else if (file.name.match(/\.docx?$/i)) {
+          const ab = await file.arrayBuffer();
+          const result = await mammoth.extractRawText({arrayBuffer: ab});
+          window.phaseState[stKey].doc = result.value;
+        } else if (file.type.startsWith('image/')) {
+          await new Promise(res => {
+            const reader = new FileReader();
+            reader.onload = e => {
+              window.phaseState[stKey].imageData = e.target.result;
+              window.phaseState[stKey].imageType = file.type;
+              window.phaseState[stKey].doc = null;
+              res();
+            };
+            reader.readAsDataURL(file);
+          });
+        } else {
+          window.phaseState[stKey].doc = await file.text();
+        }
+        window.phaseState[stKey].fileName = file.name;
+        if (label) label.textContent = `📎 ${file.name}`;
+      } catch(e) {
+        if (label) label.textContent = '⚠ Error reading file';
+      }
+    }
+
+    async function runPhaseSkill(phId, skillKey) {
+      const apiKey = getApiKey();
+      if (!apiKey) { alert('Add your API key in Settings first.'); return; }
+      const stKey = `${currentProject}_${phId}`;
+      const state = window.phaseState[stKey] || {};
+      if (!state.doc && !state.imageData) { alert('Attach a document to this phase first.'); return; }
+
+      const btn = document.getElementById(`phaseBtn_${phId}_${skillKey}`);
+      let resultEl = document.getElementById(`phaseResult_${phId}_${skillKey}`);
+      if (btn) btn.disabled = true;
+      if (resultEl) { resultEl.style.display = 'block'; resultEl.textContent = '⟳ Running skill...'; }
+
+      const slug = skillKey.toLowerCase().replace(/_/g, '-');
+      const skillEntry = skillsCache?.skills?.find(s => s.slug === slug || s.slug?.startsWith(slug));
+      let skillText = `Analyse the following document for: ${SKILL_LABELS[skillKey] || skillKey}. Be structured and technical.`;
+      if (skillEntry?.file) {
+        try {
+          const r = await fetch(`https://raw.githubusercontent.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation/main/${skillEntry.file}`);
+          if (r.ok) skillText = await r.text();
+        } catch(e) {}
+      }
+
+      try {
+        const content = state.imageData
+          ? [{ type:'text', text: skillText + '\n\nAnalyse the attached document:' },
+             { type:'image', source:{ type:'base64', media_type: state.imageType, data: state.imageData.split(',')[1] }}]
+          : `${skillText}\n\n---\n\nDOCUMENT:\n${state.doc}`;
+
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
+          body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 600, messages: [{ role:'user', content }] })
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error.message);
+        const output = data.content[0].text;
+        window.phaseState[stKey].results = window.phaseState[stKey].results || {};
+        window.phaseState[stKey].results[skillKey] = output;
+        if (resultEl) resultEl.textContent = output;
+
+        // Show Save button — user decides when to commit
+        const p = projects.find(x => x.id === currentProject);
+        const saveEl = document.getElementById(`phaseSave_${phId}_${skillKey}`);
+        if (saveEl) {
+          saveEl.style.display = 'inline-block';
+          saveEl.textContent = '↑ Save to GitHub';
+          saveEl.style.color = 'var(--accent)';
+          saveEl.style.background = 'rgba(91,141,181,0.1)';
+          saveEl.style.border = '1px solid rgba(91,141,181,0.3)';
+          saveEl.style.cursor = 'pointer';
+          saveEl.onclick = async () => {
+            saveEl.textContent = '⟳ Saving...';
+            saveEl.style.cursor = 'default';
+            const customerFolder = (p?.kunde || p?.id || currentProject).replace(/\s+/g,'');
+            const phaseName = PHASES[phId-1]?.name || `Phase ${phId}`;
+            try {
+              const saveRes = await fetch('http://localhost:5001/api/save-result', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ customer: customerFolder, projectId: currentProject, skillName: SKILL_LABELS[skillKey] || skillKey, result: output, phase: phaseName })
+              });
+              const saveData = await saveRes.json();
+              if (saveData.success) {
+                saveEl.textContent = '✓ Saved to GitHub';
+                saveEl.style.color = 'var(--green)';
+                saveEl.style.background = 'rgba(52,199,89,0.08)';
+                saveEl.style.border = '1px solid rgba(52,199,89,0.25)';
+                saveEl.onclick = null;
+                const phaseSkills = PHASES[phId-1]?.skills || [];
+                const skillIdx = phaseSkills.indexOf(skillKey);
+                if (skillIdx >= 0 && p) {
+                  if (!p.gates[phId]) p.gates[phId] = new Array(PHASES[phId-1].gates.length).fill(0);
+                  p.gates[phId][skillIdx] = 1;
+                  // Update just this gate in the DOM — no full re-render
+                  const chk = document.getElementById(`gateCheck_${phId}_${skillIdx}`);
+                  const lbl = document.getElementById(`gateLabel_${phId}_${skillIdx}`);
+                  if (chk) { chk.classList.add('done'); chk.textContent = '✓'; }
+                  if (lbl) { lbl.style.color = 'var(--text3)'; lbl.style.textDecoration = 'line-through'; }
+                }
+              } else {
+                saveEl.textContent = '⚠ Save failed — retry';
+                saveEl.style.cursor = 'pointer';
+              }
+            } catch(e) {
+              saveEl.textContent = '⚠ Flask offline';
+              saveEl.style.color = 'var(--red)';
+            }
+          };
+        }
+      } catch(e) {
+        if (resultEl) resultEl.textContent = 'Error: ' + e.message;
+      }
+      if (btn) btn.disabled = false;
+    }
+
     function openModal(type) {
       closeModal();
-      if (type === 'createProject') {
-        document.getElementById('createProjectModal').classList.add('show');
+      const map = { createProject: 'createProjectModal', createSkill: 'createSkillModal' };
+      const id = map[type] || 'projectDetailModal';
+      document.getElementById(id).classList.add('show');
+      if (type === 'createSkill') loadMultiStandards('createStandardsList');
+    }
+
+    function toggleCustomDomain(sel) {
+      const custom = document.getElementById('skillDomainCustom');
+      custom.style.display = sel.value === '__custom__' ? 'block' : 'none';
+      if (sel.value === '__custom__') custom.focus();
+    }
+
+    function loadSkillMd(input) {
+      const file = input.files[0];
+      if (!file) return;
+      document.getElementById('skillMdLabel').textContent = '✓ ' + file.name;
+      const reader = new FileReader();
+      reader.onload = e => {
+        document.getElementById('skillPrompt').value = e.target.result;
+        // Auto-fill skill name from filename if empty
+        const nameEl = document.getElementById('skillName');
+        if (!nameEl.value) {
+          nameEl.value = file.name.replace(/\.md$/i, '').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function loadStandardFile(input, targetId, statusId) {
+      const file = input.files[0];
+      if (!file) return;
+      const statusEl = document.getElementById(statusId);
+      if (statusEl) statusEl.textContent = '⟳ Reading ' + file.name + '...';
+      const reader = new FileReader();
+      reader.onload = e => {
+        document.getElementById(targetId).value = e.target.result;
+        if (statusEl) statusEl.textContent = '✓ Loaded: ' + file.name;
+        // Clear dropdown selection since we're using uploaded file
+        const selId = targetId === 'runStandardCustom' ? 'runStandardSelect' : 'testStandardSelect';
+        const sel = document.getElementById(selId);
+        if (sel) sel.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    function highlightPhaseLabel(checkbox) {
+      const label = checkbox.closest('label');
+      if (checkbox.checked) {
+        label.style.borderColor = 'var(--accent)';
+        label.style.background = 'var(--accent)18';
+      } else {
+        label.style.borderColor = 'var(--border)';
+        label.style.background = 'var(--bg3)';
+      }
+    }
+
+    function getSelectedPhases() {
+      return [1,2,3,4,5,6,7,8,9]
+        .filter(n => document.getElementById('skillPhase' + n)?.checked)
+        .map(n => n);
+    }
+
+    async function generateSkillPrompt(withFeedback = false) {
+      const apiKey = getApiKey();
+      if (!apiKey) { alert('Add your API key in Settings first.'); return; }
+      const description = document.getElementById('skillDescription').value.trim();
+      const name        = document.getElementById('skillName').value.trim();
+      const sel         = document.getElementById('skillDomain');
+      const domain      = sel.value === '__custom__' ? document.getElementById('skillDomainCustom').value.trim() : sel.value;
+      const feedback    = withFeedback ? (document.getElementById('skillFeedback').value.trim()) : '';
+      const existing    = withFeedback ? (document.getElementById('skillPrompt').value.trim()) : '';
+      if (!description) { alert('Describe what you want the skill to do first.'); return; }
+
+      const btn = document.getElementById('generateSkillBtn');
+      const promptEl = document.getElementById('skillPrompt');
+      btn.textContent = '⟳ Building skill...';
+      btn.disabled = true;
+      promptEl.value = '';
+      promptEl.placeholder = 'Claude is writing your skill prompt...';
+
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true',
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 1024,
+            system: `You are an expert prompt engineer for 3P Teknik A/S, a Danish engineering consultancy specialising in ATEX, NH3, PLC/SCADA, trace heating, and industrial switchboard design.
+
+Your job: convert a plain-language description into a precise, reusable skill prompt that Claude will run against engineering documents or diagrams.
+
+The skill prompt must produce a CONCISE NUMBERED OUTLINE. Each finding is 2 lines maximum. No paragraphs. No "correct installation" sections. No verbose explanation.
+
+EXACT FORMAT the skill must produce:
+
+1. **[Issue title]**
+   - [Root cause in one sentence] — [Standard: IEC/ATEX/EN reference] + [CRITICAL/WARNING/OK]
+
+2. **[Issue title]**
+   - [Root cause in one sentence] — [Standard] + [CRITICAL/WARNING/OK]
+
+→ ACTION: [One concrete next step]
+
+GOOD example of a finding:
+2. **Earthing conductor cross-section missing**
+   - Document states "connect to earth" but omits sizing, routing, or torque spec — IEC 60364-5-52 clause 543.4.4 + CRITICAL
+
+BAD example (never do this):
+2. **Earthing Conductor Routing and Terminal Connection Not Detailed**
+   - Root cause: Document states "varmekablets jordleder..." without specifying conductor cross-section...
+   Inspect: Measure earthing conductor size... verify it does not run in contact...
+   Correct installation: Earthing conductor minimum 2.5 mm² Cu...
+
+The skill prompt you write must:
+- Open with: "You are a senior engineer at 3P Teknik A/S."
+- Instruct Claude to output ONLY the numbered format above
+- Be specific about what to check: terminals, setpoints, zone boundaries, cable sizing, earthing, relay logic, etc.
+- Handle Danish and English input naturally
+- Explicitly forbid "correct installation" sections, paragraphs, and tables
+
+Return ONLY the skill prompt text. No explanation, no preamble, no markdown fences.`,
+            messages: withFeedback ? [
+              { role: 'user', content: `Skill name: ${name || 'unnamed'}\nDomain: ${domain || 'General'}\n\nDescription: ${description}` },
+              { role: 'assistant', content: existing },
+              { role: 'user', content: `That's not quite right. Please revise it with this feedback: ${feedback}` }
+            ] : [
+              { role: 'user', content: `Skill name: ${name || 'unnamed'}\nDomain: ${domain || 'General'}\n\nDescription: ${description}` }
+            ]
+          })
+        });
+        const data = await res.json();
+        if (data.content && data.content[0]) {
+          promptEl.value = data.content[0].text;
+          promptEl.placeholder = '';
+          btn.textContent = '✦ Rebuild Skill';
+          document.getElementById('skillFeedbackGroup').style.display = 'block';
+          document.getElementById('skillFeedback').value = '';
+        } else {
+          promptEl.placeholder = 'Something went wrong — try again.';
+          btn.textContent = '✦ Build Skill from Description';
+        }
+      } catch(e) {
+        promptEl.placeholder = 'Error calling API — check your key in Settings.';
+        btn.textContent = '✦ Build Skill from Description';
+      }
+      btn.disabled = false;
+    }
+
+    async function saveSkill() {
+      const name = document.getElementById('skillName').value.trim();
+      const sel  = document.getElementById('skillDomain');
+      const domain = sel.value === '__custom__'
+        ? document.getElementById('skillDomainCustom').value.trim()
+        : sel.value;
+      const prompt = document.getElementById('skillPrompt').value.trim();
+      const status = document.getElementById('skillSaveStatus');
+
+      if (!name || !prompt) { status.textContent = 'Fill in name and prompt.'; return; }
+
+      const phases = getSelectedPhases();
+      status.textContent = 'Saving to GitHub...';
+      try {
+        const res = await fetch('http://localhost:5001/api/save-skill', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, domain, prompt, phases })
+        });
+        const data = await res.json();
+        if (data.success) {
+          status.style.color = 'var(--green)';
+          status.textContent = `Saved ${data.version || ''} → ${data.path}`;
+          skillsCache = null; // force reload
+          setTimeout(() => { closeModal(); filterSkills('all', document.querySelector('.filter-btn')); }, 1400);
+        } else {
+          status.style.color = 'var(--red)';
+          status.textContent = data.error || 'Save failed.';
+        }
+      } catch (e) {
+        status.style.color = 'var(--red)';
+        status.textContent = 'Cannot reach Flask backend (localhost:5001).';
+      }
+    }
+
+    async function loadRunFile(input) {
+      const file = input.files[0];
+      if (!file) return;
+      _runImage = null;
+      document.getElementById('runFileLabel').textContent = file.name;
+      const statusEl = document.getElementById('runFileStatus');
+      const previewEl = document.getElementById('runImagePreview');
+      if (previewEl) previewEl.innerHTML = '';
+      try {
+        const result = await loadAnyFile(file, statusEl);
+        if (result.image) {
+          _runImage = result.image;
+          document.getElementById('runDocument').value = '';
+          document.getElementById('runDocument').placeholder = '(image loaded — Claude will analyse it visually)';
+          if (previewEl) showImageThumb(result.image.base64, result.image.mimeType, previewEl);
+        } else {
+          document.getElementById('runDocument').value = result.text;
+          document.getElementById('runDocument').placeholder = 'Paste the document text...';
+        }
+      } catch(e) {
+        if (statusEl) { statusEl.textContent = 'Failed to load file.'; statusEl.style.color = 'var(--red)'; }
+      }
+    }
+
+    async function loadProjFile(input) {
+      const file = input.files[0];
+      if (!file) return;
+      _projImage = null;
+      document.getElementById('projFileLabel').textContent = file.name;
+      const preview = document.getElementById('projFilePreview');
+      const statusEl = document.getElementById('projFileStatus');
+      preview.style.display = 'block';
+      try {
+        const result = await loadAnyFile(file, statusEl);
+        if (result.image) {
+          _projImage = result.image;
+          input._content = '[image]';
+          preview.innerHTML = `<img src="data:${result.image.mimeType};base64,${result.image.base64}" style="max-height:80px;border-radius:4px;">`;
+        } else {
+          input._content = result.text;
+          preview.textContent = result.text.slice(0, 300) + (result.text.length > 300 ? '…' : '');
+        }
+      } catch(e) {
+        if (statusEl) { statusEl.textContent = 'Failed to load file.'; statusEl.style.color = 'var(--red)'; }
+      }
+    }
+
+    async function loadSkillTestFile(input) {
+      const file = input.files[0];
+      if (!file) return;
+      _skillTestImage = null;
+      document.getElementById('skillFileLabel').textContent = file.name;
+      const resultEl = document.getElementById('skillTestResult');
+      resultEl.className = 'test-result-box running';
+      resultEl.textContent = 'Loading file...';
+      try {
+        const result = await loadAnyFile(file, null);
+        if (result.image) {
+          _skillTestImage = result.image;
+          document.getElementById('skillTestDoc').value = '';
+          document.getElementById('skillTestDoc').placeholder = '(image loaded — Claude will analyse it visually)';
+          resultEl.className = 'test-result-box';
+          resultEl.innerHTML = `<img src="data:${result.image.mimeType};base64,${result.image.base64}" style="max-height:100px;border-radius:6px;margin-bottom:8px;display:block;">Image loaded — hit Run Test to analyse it.`;
+        } else {
+          document.getElementById('skillTestDoc').value = result.text;
+          document.getElementById('skillTestDoc').placeholder = 'Paste any text...';
+          resultEl.className = 'test-result-box';
+          resultEl.textContent = `File loaded (${result.text.length.toLocaleString()} chars) — hit Run Test to analyse it.`;
+        }
+      } catch(e) {
+        resultEl.className = 'test-result-box error';
+        resultEl.textContent = 'Failed to load file.';
+      }
+    }
+
+    async function testSkillInline() {
+      const key = getApiKey();
+      const prompt = document.getElementById('skillPrompt').value.trim();
+      const doc = document.getElementById('skillTestDoc').value.trim();
+      const result = document.getElementById('skillTestResult');
+      const tokens = document.getElementById('skillTestTokens');
+
+      if (!key) { result.className = 'test-result-box error'; result.textContent = '⚠ No API key — go to Settings first.'; return; }
+      if (!prompt) { result.className = 'test-result-box error'; result.textContent = '⚠ Write a prompt first (left column).'; return; }
+      if (!doc && !_skillTestImage) { result.className = 'test-result-box error'; result.textContent = '⚠ Paste a document or upload an image/file to test against.'; return; }
+
+      result.className = 'test-result-box running';
+      result.textContent = 'Running skill via Claude API...';
+      tokens.textContent = '';
+
+      try {
+        const checkedCreate = [...document.querySelectorAll('#createStandardsList input[type=checkbox]:checked')];
+        let createStdCtx = '';
+        for (const cb of checkedCreate) {
+          const content = await fetchStandardContent(cb.value);
+          if (content) {
+            const label = cb.value.split('/').pop().replace('.md','');
+            createStdCtx += `\n\n---\nREFERENCE STANDARD — ${label}:\n${content}\n---`;
+          }
+        }
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': key,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true'
+          },
+          body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 2048,
+            messages: [{ role: 'user', content: buildMessageContent(prompt + createStdCtx, doc, _skillTestImage) }]
+          })
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error.message);
+        result.className = 'test-result-box done';
+        result.textContent = data.content[0].text;
+        tokens.textContent = `↑ ${data.usage.input_tokens} in + ${data.usage.output_tokens} out tokens`;
+      } catch (err) {
+        result.className = 'test-result-box error';
+        result.textContent = 'Error: ' + err.message;
       }
     }
 
     function closeModal() {
       document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('show'));
+      _skillTestImage = null;
+      // Reset phase checkboxes
+      [1,2,3,4,5,6,7,8,9].forEach(n => {
+        const cb = document.getElementById('skillPhase' + n);
+        if (cb) { cb.checked = false; highlightPhaseLabel(cb); }
+      });
+      // Reset .md upload
+      const mi = document.getElementById('skillMdInput');
+      if (mi) mi.value = '';
+      const ml = document.getElementById('skillMdLabel');
+      if (ml) ml.textContent = 'Upload existing .md skill file to pre-fill…';
+      const r = document.getElementById('skillTestResult');
+      if (r) { r.className = 'test-result-box'; r.textContent = 'Result will appear here after you run the test.'; }
+      const t = document.getElementById('skillTestTokens');
+      if (t) t.textContent = '';
+      const fi = document.getElementById('skillFileInput');
+      if (fi) fi.value = '';
+      const fl = document.getElementById('skillFileLabel');
+      if (fl) fl.textContent = 'Click to choose file…';
+      const sd = document.getElementById('skillTestDoc');
+      if (sd) { sd.value = ''; sd.placeholder = 'Paste any text — inspection report excerpt, spec paragraph, email content...\n\nClaude will run your skill prompt against this.'; }
     }
 
     function saveProject() {
-      const id = document.getElementById('projId').value;
-      const name = document.getElementById('projName').value;
-      const cust = document.getElementById('projCustomer').value;
+      const id = document.getElementById('projId').value.trim();
+      const name = document.getElementById('projName').value.trim();
+      const cust = document.getElementById('projCustomer').value.trim();
       if (!id || !name || !cust) return alert('Fill all fields');
-      
+      const fileInput = document.getElementById('projFileInput');
+      const docContent = fileInput?._content || null;
+      const docName = fileInput?.files[0]?.name || null;
       projects.push({
-        id, name, kunde: cust, type: document.getElementById('projType').value,
-        atex: document.getElementById('projAtex').value === 'true', phase: 1,
-        gates: {1: [0,0,0]}, files: {}, created: new Date().toISOString().slice(0,10)
+        id, name, kunde: cust,
+        type: document.getElementById('projType').value,
+        atex: document.getElementById('projAtex').value === 'true',
+        phase: 1, gates: {1:[0,0,0]},
+        files: docContent ? { [docName]: docContent } : {},
+        created: new Date().toISOString().slice(0,10)
       });
       closeModal();
+      ['projId','projName','projCustomer'].forEach(f => document.getElementById(f).value = '');
+      if (fileInput) { fileInput.value = ''; fileInput._content = null; }
+      const fl = document.getElementById('projFileLabel');
+      if (fl) fl.textContent = 'Click to attach document…';
+      const fp = document.getElementById('projFilePreview');
+      if (fp) { fp.style.display = 'none'; fp.textContent = ''; }
       renderProjects();
-      document.getElementById('projId').value = '';
-      document.getElementById('projName').value = '';
-      document.getElementById('projCustomer').value = '';
     }
 
+    // ── API KEY ──────────────────────────────────────────────────────────────
+    function saveApiKey() {
+      const key = document.getElementById('apiKeyInput').value.trim();
+      if (!key.startsWith('sk-ant-')) {
+        document.getElementById('apiKeyStatus').style.color = 'var(--red)';
+        document.getElementById('apiKeyStatus').textContent = 'Invalid key format.';
+        return;
+      }
+      localStorage.setItem('3p_anthropic_key', key);
+      document.getElementById('apiKeyStatus').style.color = 'var(--green)';
+      document.getElementById('apiKeyStatus').textContent = 'Key saved locally ✓';
+      document.getElementById('apiKeyInput').value = '';
+      updateKeyBanner();
+    }
+
+    function clearApiKey() {
+      localStorage.removeItem('3p_anthropic_key');
+      document.getElementById('apiKeyStatus').style.color = 'var(--text3)';
+      document.getElementById('apiKeyStatus').textContent = 'Key cleared.';
+      updateKeyBanner();
+    }
+
+    function updateKeyBanner() {
+      const banner = document.getElementById('runKeyBanner');
+      if (!banner) return;
+      if (getApiKey()) {
+        banner.className = 'api-key-banner ok';
+        banner.textContent = window.ANTHROPIC_KEY
+          ? '✓ API key loaded from server — ready to run skills'
+          : '✓ API key configured — ready to run skills';
+      } else {
+        banner.className = 'api-key-banner';
+        banner.textContent = '⚠ No API key — start Flask backend or add key in Settings';
+      }
+    }
+
+    // ── RUN SKILL ─────────────────────────────────────────────────────────────
+    async function runSkill() {
+      const key = getApiKey();
+      if (!key) { alert('Add your API key in Settings first.'); switchView('settings'); return; }
+
+      const skillFile = document.getElementById('runSkillSelect').value;
+      const doc = document.getElementById('runDocument').value.trim();
+      if (!doc && !_runImage) { alert('Upload a file or paste text to analyse.'); return; }
+
+      const output = document.getElementById('runOutput');
+      const status = document.getElementById('runStatus');
+      output.className = 'run-output loading';
+      output.textContent = 'Fetching skill from GitHub...';
+      status.textContent = '';
+
+      try {
+        const rawUrl = `https://raw.githubusercontent.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation/main/${skillFile}`;
+        const skillText = await fetch(rawUrl).then(r => r.text());
+
+        const checked = [...document.querySelectorAll('#runStandardsList input[type=checkbox]:checked')];
+        status.textContent = checked.length ? `⟳ Loading ${checked.length} standard(s)...` : '⟳ Running...';
+        let standardCtx = '';
+        for (const cb of checked) {
+          const content = await fetchStandardContent(cb.value);
+          if (content) {
+            const label = cb.value.split('/').pop().replace('.md','');
+            standardCtx += `\n\n---\nREFERENCE STANDARD — ${label}:\n${content}\n---`;
+          }
+        }
+
+        const brevityWrapper = '\n\n---\nIMPORTANT: Output as a concise numbered list only. One finding per line with root cause and standard reference. Severity: CRITICAL / WARNING / OK. End with one ACTION line. No paragraphs, no tables, no long sections.';
+        const fullPrompt = skillText + standardCtx + brevityWrapper;
+
+        output.textContent = 'Running skill via Claude API...';
+
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': key,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true'
+          },
+          body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 600,
+            messages: [{
+              role: 'user',
+              content: buildMessageContent(fullPrompt, doc, _runImage)
+            }]
+          })
+        });
+
+        const data = await res.json();
+        if (data.error) throw new Error(data.error.message);
+
+        output.className = 'run-output';
+        output.textContent = data.content[0].text;
+        status.style.color = 'var(--text3)';
+        status.textContent = `Used ${data.usage.input_tokens} in + ${data.usage.output_tokens} out tokens`;
+      } catch (err) {
+        output.className = 'run-output';
+        output.style.color = 'var(--red)';
+        output.textContent = 'Error: ' + err.message;
+      }
+    }
+
+    const STANDARDS_BASE = 'https://raw.githubusercontent.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation/main/_standards';
+    const STANDARDS_API  = 'https://api.github.com/repos/Deleuzy/3P-Tech-Knowledge-Retention-Automation/contents/_standards';
+
+    async function loadStandardsList() {
+      const options = [{ value: '', label: 'No standard — general analysis' }];
+      try {
+        const idx = await fetchStandardsIndex();
+        for (const folder of idx.folders) {
+          for (const file of folder.files) {
+            const path = `_standards/${folder.name}/${file}.md`;
+            options.push({ value: path, label: `${folder.name} / ${file}` });
+          }
+        }
+      } catch(e) { /* keep just the default option */ }
+
+      ['runStandardSelect','testStandardSelect'].forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        sel.innerHTML = options.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+      });
+    }
+
+    async function fetchStandardContent(path) {
+      if (!path) return '';
+      const url = `${STANDARDS_BASE}/${path.replace('_standards/','').replace('_standards\\','')}`;
+      try {
+        const res = await fetch(url.startsWith('http') ? url : `${STANDARDS_BASE}/${path}`);
+        return await res.text();
+      } catch(e) { return ''; }
+    }
+
+    async function onRunStandardSelect(sel) {
+      const status = document.getElementById('runStandardStatus');
+      if (!sel.value) { status.textContent = ''; return; }
+      status.textContent = '⟳ Loading standard...';
+      const content = await fetchStandardContent(sel.value);
+      document.getElementById('runStandardCustom').value = content;
+      status.textContent = content ? `✓ Loaded: ${sel.options[sel.selectedIndex].text}` : '⚠ Could not load — paste manually';
+    }
+
+    async function onTestStandardSelect(sel) {
+      const status = document.getElementById('testStandardStatus');
+      if (!sel.value) { status.textContent = ''; return; }
+      status.textContent = '⟳ Loading standard...';
+      const content = await fetchStandardContent(sel.value);
+      document.getElementById('testStandardCustom').value = content;
+      status.textContent = content ? `✓ Loaded: ${sel.options[sel.selectedIndex].text}` : '⚠ Could not load — paste manually';
+    }
+
+    function getStandardContext(customId) {
+      const txt = (document.getElementById(customId)?.value || '').trim();
+      if (!txt) return '';
+      return `\n\n---\nREFERENCE STANDARD (check all findings against this):\n${txt}\n---`;
+    }
+
+    function populateRunSkillSelect() {
+      if (!skillsCache) return;
+      const sel = document.getElementById('runSkillSelect');
+      sel.innerHTML = skillsCache.map(s => `<option value="${s.file}">${s.domain} — ${s.name}</option>`).join('');
+    }
+
+    // Auto-fetch API key from Flask .env on startup
+    async function initApiKey() {
+      try {
+        const res = await fetch('http://localhost:5001/api/config');
+        const data = await res.json();
+        if (data.anthropicKey && data.anthropicKey.startsWith('sk-ant-')) {
+          window.ANTHROPIC_KEY = data.anthropicKey;
+          localStorage.setItem('3p_anthropic_key', data.anthropicKey);
+        }
+      } catch(e) {
+        // Flask offline — fall back to localStorage
+        const stored = getApiKey();
+        if (stored) window.ANTHROPIC_KEY = stored;
+      }
+      updateKeyBanner();
+    }
+
+    function getApiKey() {
+      return window.ANTHROPIC_KEY || localStorage.getItem('3p_anthropic_key') || null;
+    }
+
+    // ── SKILL RUNNER (click skill → modal) ──────────────────────────
+    let _srSkill = null;
+    let _srImage = null;
+
+    async function openSkillRunner(skill) {
+      _srSkill = skill;
+      _srImage = null;
+      document.getElementById('srSkillName').textContent = skill.name;
+      document.getElementById('srSkillDomain').textContent = (skill.domain || 'General').toUpperCase() + ' · ' + (skill.file || '');
+      document.getElementById('srResult').textContent = 'Result will appear here after you run the skill.';
+      document.getElementById('srResult').style.color = 'var(--text3)';
+      document.getElementById('srStatus').textContent = '';
+      document.getElementById('srTokens').textContent = '';
+      document.getElementById('srFileLabel').textContent = 'Click to choose file — PDF, Word, Image, TXT';
+      document.getElementById('srDocText').value = '';
+      document.getElementById('srFileInput').value = '';
+      document.getElementById('skillRunnerModal').classList.add('show');
+      await loadSrStandards();
+    }
+
+    function closeSkillRunner() {
+      document.getElementById('skillRunnerModal').classList.remove('show');
+      _srSkill = null;
+      _srImage = null;
+    }
+
+    async function loadMultiStandards(listId) {
+      const list = document.getElementById(listId);
+      if (!list) return;
+      list.innerHTML = '<div style="font-size:11px;color:var(--text3);">Loading...</div>';
+      try {
+        const idx = await fetchStandardsIndex();
+        let html = '';
+        for (const folder of idx.folders) {
+          if (!folder.files.length) continue;
+          html += `<div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:1px;margin-top:8px;margin-bottom:4px;">${folder.name}</div>`;
+          for (const f of folder.files) {
+            const path = `_standards/${folder.name}/${f}.md`;
+            html += `<label style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:12px;color:var(--text2);transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+              <input type="checkbox" value="${path}" style="accent-color:var(--accent);width:14px;height:14px;">
+              ${f}
+            </label>`;
+          }
+        }
+        list.innerHTML = html || '<div style="font-size:11px;color:var(--text3);">No standards found.</div>';
+      } catch(e) {
+        list.innerHTML = '<div style="font-size:11px;color:var(--text3);">Could not load — check connection.</div>';
+      }
+    }
+
+    async function loadSrStandards() {
+      const list = document.getElementById('srStandardsList');
+      list.innerHTML = '<div style="font-size:11px;color:var(--text3);">Loading...</div>';
+      try {
+        const idx = await fetchStandardsIndex();
+        let html = '';
+        for (const folder of idx.folders) {
+          if (!folder.files.length) continue;
+          html += `<div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:1px;margin-top:8px;margin-bottom:4px;">${folder.name}</div>`;
+          for (const f of folder.files) {
+            const path = `_standards/${folder.name}/${f}.md`;
+            html += `<label style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:12px;color:var(--text2);transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+              <input type="checkbox" value="${path}" style="accent-color:var(--accent);width:14px;height:14px;">
+              ${f}
+            </label>`;
+          }
+        }
+        list.innerHTML = html || '<div style="font-size:11px;color:var(--text3);">No standards found.</div>';
+      } catch(e) {
+        list.innerHTML = '<div style="font-size:11px;color:var(--text3);">Could not load — check connection.</div>';
+      }
+    }
+
+    function loadSrFile(input) {
+      const file = input.files[0];
+      if (!file) return;
+      document.getElementById('srFileLabel').textContent = '✓ ' + file.name;
+      const isImage = file.type.startsWith('image/');
+      if (isImage) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          _srImage = { base64: e.target.result.split(',')[1], mediaType: file.type };
+          document.getElementById('srDocText').value = '';
+          document.getElementById('srDocText').placeholder = '(image loaded — Claude will analyse it visually)';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        _srImage = null;
+        extractTextFromFile(file, text => {
+          document.getElementById('srDocText').value = text;
+        });
+      }
+    }
+
+    async function runSkillFromCard() {
+      const key = getApiKey();
+      if (!key) { alert('Add your API key in Settings first.'); return; }
+      if (!_srSkill) return;
+
+      const doc    = document.getElementById('srDocText').value.trim();
+      const result = document.getElementById('srResult');
+      const status = document.getElementById('srStatus');
+      const tokens = document.getElementById('srTokens');
+
+      if (!doc && !_srImage) { status.textContent = '⚠ Upload a file or paste text first.'; status.style.color='var(--red)'; return; }
+
+      // Collect checked standards
+      const checked = [...document.querySelectorAll('#srStandardsList input[type=checkbox]:checked')];
+      status.textContent = checked.length ? `⟳ Loading ${checked.length} standard(s)...` : '⟳ Running...';
+      status.style.color = 'var(--accent)';
+      result.style.color = 'var(--text3)';
+      result.textContent = 'Fetching skill and standards from GitHub...';
+
+      try {
+        // Fetch skill prompt
+        const rawUrl = `https://raw.githubusercontent.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation/main/${_srSkill.file}`;
+        const skillText = await fetch(rawUrl).then(r => r.text());
+
+        // Fetch all selected standards
+        let standardsCtx = '';
+        for (const cb of checked) {
+          const content = await fetchStandardContent(cb.value);
+          if (content) {
+            const label = cb.value.split('/').pop().replace('.md','');
+            standardsCtx += `\n\n---\nREFERENCE STANDARD — ${label}:\n${content}\n---`;
+          }
+        }
+
+        const brevity = '\n\n---\nIMPORTANT: Output as a concise numbered list. One finding per line with root cause and standard reference. Severity: CRITICAL / WARNING / OK. End with one ACTION line. No paragraphs or tables.';
+        const fullPrompt = skillText + standardsCtx + brevity;
+
+        status.textContent = '⟳ Running skill via Claude...';
+        result.textContent = 'Analysing...';
+
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': key,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true'
+          },
+          body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 600,
+            messages: [{ role: 'user', content: buildMessageContent(fullPrompt, doc, _srImage) }]
+          })
+        });
+
+        const data = await res.json();
+        if (data.error) throw new Error(data.error.message);
+        result.style.color = 'var(--text)';
+        result.textContent = data.content[0].text;
+        status.textContent = checked.length ? `✓ Checked against ${checked.length} standard(s)` : '✓ Done';
+        tokens.textContent = `${data.usage.input_tokens} in + ${data.usage.output_tokens} out tokens`;
+      } catch(e) {
+        result.textContent = 'Error: ' + e.message;
+        result.style.color = 'var(--red)';
+        status.textContent = '';
+      }
+    }
+    // ────────────────────────────────────────────────────────────────
+
+    // ── STANDARDS VIEW ──────────────────────────────────────────────
+    function onStdFileSelect(input) {
+      const file = input.files[0];
+      if (!file) return;
+      document.getElementById('stdFileLabel').textContent = '✓ ' + file.name;
+      // Auto-fill name from filename
+      const nameEl = document.getElementById('stdUploadName');
+      if (!nameEl.value) {
+        nameEl.value = file.name.replace(/\.[^.]+$/, '').replace(/[\s_]+/g, '-').toLowerCase();
+      }
+    }
+
+    document.getElementById('stdUploadDomain').addEventListener('change', function() {
+      document.getElementById('stdUploadDomainCustom').style.display = this.value === '__custom__' ? 'block' : 'none';
+    });
+
+    async function loadStandardsDomains() {
+      const sel = document.getElementById('stdUploadDomain');
+      if (!sel) return;
+      try {
+        const idx  = await fetchStandardsIndex();
+        const dirs = idx.folders.map(f => f.name);
+        sel.innerHTML = dirs.map(d => `<option value="${d}">${d}</option>`).join('');
+        sel.innerHTML += '<option value="__custom__">+ New folder...</option>';
+      } catch(e) {
+        sel.innerHTML = `
+          <option value="NH3">NH3</option>
+          <option value="ATEX">ATEX</option>
+          <option value="EPLAN">EPLAN</option>
+          <option value="Trace-Heating">Trace-Heating</option>
+          <option value="General">General</option>
+          <option value="__custom__">+ New folder...</option>`;
+      }
+    }
+
+    async function uploadStandard() {
+      const domSel = document.getElementById('stdUploadDomain');
+      const domain = domSel.value === '__custom__'
+        ? document.getElementById('stdUploadDomainCustom').value.trim()
+        : domSel.value;
+      const name   = document.getElementById('stdUploadName').value.trim();
+      const file   = document.getElementById('stdFileInput').files[0];
+      const status = document.getElementById('stdUploadStatus');
+
+      if (!domain) { status.textContent = '⚠ Choose a domain folder first.'; return; }
+      if (!name)   { status.textContent = '⚠ Enter a file name.'; return; }
+      if (!file)   { status.textContent = '⚠ Select a file to upload.'; return; }
+
+      status.textContent = '⟳ Sending to Flask for conversion...';
+      status.style.color = 'var(--accent)';
+
+      try {
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('domain', domain);
+        fd.append('name', name);
+
+        const res = await fetch('http://localhost:5001/api/upload-standard', { method: 'POST', body: fd });
+        const data = await res.json();
+
+        if (data.success) {
+          status.style.color = 'var(--green)';
+          status.textContent = `✓ Saved to _standards/${domain}/${name}.md on GitHub`;
+          // Reset form
+          document.getElementById('stdFileInput').value = '';
+          document.getElementById('stdFileLabel').textContent = 'Click to choose file — PDF, Word, TXT, MD';
+          document.getElementById('stdUploadName').value = '';
+          // Refresh list and dropdowns
+          loadStandardsView();
+          loadStandardsList();
+        } else {
+          status.style.color = 'var(--red)';
+          status.textContent = '⚠ ' + (data.error || 'Upload failed');
+        }
+      } catch(e) {
+        status.style.color = 'var(--red)';
+        status.textContent = '⚠ Flask offline — start backend first';
+      }
+    }
+
+    const STANDARDS_INDEX_URL = 'https://raw.githubusercontent.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation/main/_standards/standards-index.json';
+
+    async function fetchStandardsIndex() {
+      const res  = await fetch(STANDARDS_INDEX_URL + '?t=' + Date.now());
+      return await res.json();
+    }
+
+    async function loadStandardsView() {
+      const list = document.getElementById('standardsList');
+      if (!list) return;
+      list.innerHTML = '<div class="loading">Loading from GitHub...</div>';
+      try {
+        const idx = await fetchStandardsIndex();
+        let html = '';
+        for (const folder of idx.folders) {
+          if (!folder.files.length) continue;
+          html += `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:8px;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:1px;margin-bottom:10px;">${folder.name}</div>`;
+          for (const f of folder.files) {
+            const path = `_standards/${folder.name}/${f}.md`;
+            html += `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border);">
+              <span style="color:var(--text2);font-size:13px;">📄 ${f}</span>
+              <a href="https://raw.githubusercontent.com/Deleuzy/3P-Tech-Knowledge-Retention-Automation/main/${path}" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;font-family:'IBM Plex Mono',monospace;">view ↗</a>
+            </div>`;
+          }
+          html += '</div>';
+        }
+        list.innerHTML = html || '<div style="color:var(--text3);font-size:13px;">No standards found.</div>';
+      } catch(e) {
+        list.innerHTML = '<div style="color:var(--text3);font-size:13px;">Could not load — check connection.</div>';
+      }
+    }
+    // ────────────────────────────────────────────────────────────────
+
     renderProjects();
+    initApiKey();
+    loadStandardsList();
   </script>
 </body>
 </html>
